@@ -1,0 +1,975 @@
+
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Uniformity Ayam</title>
+    <style>
+        :root {
+            --primary: #16a34a;
+            --primary-hover: #15803d;
+            --primary-light: #f0fdf4;
+            --secondary: #0284c7;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --neutral-dark: #1e293b;
+            --neutral-light: #f8fafc;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--neutral-dark);
+            line-height: 1.5;
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Card Component */
+        .card {
+            background: #ffffff;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-card {
+            background: linear-gradient(135deg, #0f766e 0%, #16a34a 100%);
+            color: white;
+            padding: 24px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-card h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Form Controls & Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .grid-2 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .grid-4 {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+            background-color: #fff;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            touch-action: manipulation;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #0369a1;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: #475569;
+        }
+
+        .btn-outline:hover {
+            background-color: #f1f5f9;
+            color: var(--neutral-dark);
+        }
+
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Tabs Switcher */
+        .tab-container {
+            display: flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #64748b;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stat Cards */
+        .stat-card {
+            background: var(--neutral-light);
+            border-radius: 10px;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-card .title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-card .value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--neutral-dark);
+        }
+
+        .stat-card .subtitle {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        /* Highlight Card for Uniformity */
+        .badge-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        .badge-excellent { background: #dcfce7; color: #15803d; }
+        .badge-good { background: #e0f2fe; color: #0369a1; }
+        .badge-moderate { background: #fef3c7; color: #b45309; }
+        .badge-poor { background: #fee2e2; color: #b91c1c; }
+
+        /* Distribution Progress Bar */
+        .dist-bar-container {
+            display: flex;
+            height: 22px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #e2e8f0;
+            margin: 12px 0;
+        }
+
+        .dist-segment {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            transition: width 0.4s ease;
+        }
+
+        .seg-under { background-color: #f59e0b; }
+        .seg-uniform { background-color: #10b981; }
+        .seg-over { background-color: #3b82f6; }
+
+        .dist-legend {
+            display: flex;
+            justify-content: space-around;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #475569;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Data Table */
+        .table-wrapper {
+            max-height: 280px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8fafc;
+            padding: 10px 12px;
+            font-weight: 600;
+            color: #475569;
+            position: sticky;
+            top: 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            padding: 4px;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        .delete-btn:hover {
+            background-color: #fee2e2;
+        }
+
+        /* Custom Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            left: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            background: var(--neutral-dark);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Report Info Header for Print */
+        .print-only-header {
+            display: none;
+        }
+
+        /* CSS PRINT STYLES (A4 Optimized) */
+        @media print {
+            body {
+                background: white;
+                color: black;
+                padding: 0;
+                font-size: 11pt;
+            }
+
+            .container {
+                max-width: 100%;
+                gap: 12px;
+            }
+
+            .no-print, .tab-container, .btn-group, .delete-btn, .tab-content {
+                display: none !important;
+            }
+
+            .card {
+                border: 1px solid #ccc;
+                box-shadow: none;
+                padding: 12px;
+                page-break-inside: avoid;
+            }
+
+            .header-card {
+                background: none !important;
+                color: black !important;
+                border: 2px solid #0f766e;
+                box-shadow: none;
+                padding: 12px;
+            }
+
+            .header-card h1 {
+                color: #0f766e;
+                font-size: 1.4rem;
+            }
+
+            .print-only-header {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px dashed #ccc;
+                font-size: 0.9rem;
+            }
+
+            .table-wrapper {
+                max-height: none;
+                overflow: visible;
+            }
+
+            th, td {
+                padding: 6px;
+                font-size: 0.85rem;
+            }
+
+            .stat-card {
+                background: #f8fafc !important;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Header & Farm Details Card -->
+        <div class="header-card">
+            <h1>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
+                Kalkulator Uniformity Ayam
+            </h1>
+            <p>Sistem Analisis Keseragaman Berat Badan Reban Ayam (±10%)</p>
+            
+            <!-- Information metadata section (Appears in UI and PDF Report) -->
+            <div class="print-only-header" id="printHeaderInfo">
+                <div><strong>Nama Reban:</strong> <span id="lblReban">-</span></div>
+                <div><strong>Umur Ayam:</strong> <span id="lblUmur">-</span> Hari</div>
+                <div><strong>Tarikh Ujian:</strong> <span id="lblTarikh">-</span></div>
+            </div>
+        </div>
+
+        <!-- Form Metadata Input (Reban & Date) -->
+        <div class="card no-print">
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="inputReban">Nama / Kod Reban</label>
+                    <input type="text" id="inputReban" placeholder="Cth: Reban A1 / Block 2" oninput="updatePrintInfo()">
+                </div>
+                <div class="form-group">
+                    <label for="inputUmur">Umur Ayam (Hari)</label>
+                    <input type="number" id="inputUmur" placeholder="Cth: 28" oninput="updatePrintInfo()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Entry Card -->
+        <div class="card no-print">
+            <div class="tab-container">
+                <button class="tab-btn active" onclick="switchTab('single')">Input Masukan Data</button>
+                <button class="tab-btn" onclick="switchTab('bulk')">Input Pukal (Salin/Tepek)</button>
+            </div>
+
+            <!-- Tab 1: Single Entry -->
+            <div id="tab-single" class="tab-content active">
+                <form id="singleForm" onsubmit="addSingleWeight(event)">
+                    <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+                        <div class="form-group" style="flex: 2; min-width: 140px;">
+                            <label for="inputSingleWeight">Berat Ayam (kg / gram)</label>
+                            <input type="number" id="inputSingleWeight" step="any" min="0.001" placeholder="Cth: 1.85 (kg) atau 352 (g)" autofocus>
+                        </div>
+                        <div class="form-group" style="flex: 1; min-width: 100px;">
+                            <label for="inputSingleQty">Bilangan (Ekor)</label>
+                            <input type="number" id="inputSingleQty" min="1" max="1000" value="1" placeholder="1">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="height: 42px; min-width: 100px;">
+                            + Tambah
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tab 2: Bulk Entry -->
+            <div id="tab-bulk" class="tab-content">
+                <div class="form-group">
+                    <label for="inputBulkWeights">Masukkan senarai berat (Pisahkan dengan koma, ruang, atau baris baru)</label>
+                    <textarea id="inputBulkWeights" rows="3" placeholder="Cth: 1.82, 1.90, 1.75, 1.88, 1.95, 2.01, 1.80"></textarea>
+                </div>
+                <button type="button" class="btn btn-secondary btn-full" onclick="processBulkWeights()" style="margin-top: 10px;">
+                    Proses Masukan Pukal
+                </button>
+            </div>
+        </div>
+
+        <!-- Summary Results Dashboard -->
+        <div class="card">
+            <h2 style="font-size: 1.1rem; margin-bottom: 12px; color: #334155;">Keputusan Keseragaman</h2>
+            
+            <div class="grid-4">
+                <!-- Sample Count -->
+                <div class="stat-card">
+                    <span class="title">Jumlah Sampel</span>
+                    <span class="value" id="statCount">0</span>
+                    <span class="subtitle">ekor ayam</span>
+                </div>
+
+                <!-- Average Weight -->
+                <div class="stat-card">
+                    <span class="title">Purata Berat</span>
+                    <span class="value" id="statAverage">0.00</span>
+                    <span class="subtitle">kilogram (kg)</span>
+                </div>
+
+                <!-- Min & Max -->
+                <div class="stat-card">
+                    <span class="title">Min & Maks</span>
+                    <span class="value" id="statMinMax">0.00 / 0.00</span>
+                    <span class="subtitle">kg (Terendah / Tertinggi)</span>
+                </div>
+
+                <!-- CV % -->
+                <div class="stat-card">
+                    <span class="title">Nilai CV (%)</span>
+                    <span class="value" id="statCV">0.0%</span>
+                    <span class="subtitle">Pekali Kebolehaliran</span>
+                </div>
+            </div>
+
+            <!-- Main Uniformity Score Highlight -->
+            <div style="margin-top: 16px; padding: 16px; background: var(--primary-light); border-radius: 10px; border: 1px solid #bbf7d0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;">
+                <div>
+                    <div style="font-size: 0.85rem; font-weight: 700; color: #166534; text-transform: uppercase;">Keseragaman (Uniformity)</div>
+                    <div style="font-size: 2.2rem; font-weight: 800; color: #15803d; line-height: 1.1;" id="statUniformity">0.0%</div>
+                    <div style="font-size: 0.8rem; color: #166534; margin-top: 4px;">
+                        Julat Standard (±10%): <strong id="statRange">0.00 kg - 0.00 kg</strong>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span id="badgeStatus" class="badge-status badge-excellent">Belum ada data</span>
+                </div>
+            </div>
+
+            <!-- Distribution Visual Bar -->
+            <div style="margin-top: 16px;">
+                <div style="font-size: 0.85rem; font-weight: 600; color: #475569;">Agihan Berat Sampel:</div>
+                <div class="dist-bar-container">
+                    <div id="barUnder" class="dist-segment seg-under" style="width: 0%;">0%</div>
+                    <div id="barUniform" class="dist-segment seg-uniform" style="width: 100%;">0%</div>
+                    <div id="barOver" class="dist-segment seg-over" style="width: 0%;">0%</div>
+                </div>
+                <div class="dist-legend">
+                    <div class="legend-item"><span class="dot seg-under"></span> Bawah (&lt; -10%): <strong id="countUnder">0</strong></div>
+                    <div class="legend-item"><span class="dot seg-uniform"></span> Seragam (±10%): <strong id="countUniform">0</strong></div>
+                    <div class="legend-item"><span class="dot seg-over"></span> Atas (&gt; +10%): <strong id="countOver">0</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample List Table -->
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h2 style="font-size: 1.1rem; color: #334155;">Senarai Berat Sampel</h2>
+                <span style="font-size: 0.85rem; color: #64748b;" id="tableCountText">0 rekod</span>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">#</th>
+                            <th>Berat (kg)</th>
+                            <th>Status Standard (±10%)</th>
+                            <th class="no-print" style="width: 70px; text-align: center;">Tindakan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="weightTableBody">
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #94a3b8; padding: 20px;">
+                                Tiada rekod berat dimasukkan.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Global Action Buttons -->
+        <div class="btn-group no-print">
+            <button class="btn btn-primary" onclick="calculateAll()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                Kemaskini / Kira
+            </button>
+            <button class="btn btn-secondary" onclick="loadSampleData()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Muat Contoh Data
+            </button>
+            <button class="btn btn-outline" onclick="triggerPrint()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Cetak / Simpan PDF
+            </button>
+            <button class="btn btn-danger" onclick="resetAllData()" style="margin-left: auto;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                Reset Semua
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">Notifikasi</div>
+
+    <script>
+        // State Array to hold sample weights
+        let weights = [];
+
+        // Initialize default dates
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('lblTarikh').innerText = today;
+        };
+
+        // Tab Switcher Logic
+        function switchTab(tabName) {
+            const buttons = document.querySelectorAll('.tab-btn');
+            const contents = document.querySelectorAll('.tab-content');
+
+            buttons.forEach(btn => btn.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+
+            if (tabName === 'single') {
+                buttons[0].classList.add('active');
+                document.getElementById('tab-single').classList.add('active');
+                document.getElementById('inputSingleWeight').focus();
+            } else {
+                buttons[1].classList.add('active');
+                document.getElementById('tab-bulk').classList.add('active');
+                document.getElementById('inputBulkWeights').focus();
+            }
+        }
+
+        // Single Weight & Quantity Input Handler
+        function addSingleWeight(event) {
+            event.preventDefault();
+            const input = document.getElementById('inputSingleWeight');
+            const qtyInput = document.getElementById('inputSingleQty');
+
+            let val = parseFloat(input.value);
+            const qty = parseInt(qtyInput.value) || 1;
+
+            if (isNaN(val) || val <= 0) {
+                showToast("Sila masukkan nilai berat yang sah.");
+                return;
+            }
+
+            if (qty < 1) {
+                showToast("Sila masukkan bilangan ayam yang sah (minimum 1 ekor).");
+                return;
+            }
+
+            // Smart conversion: If value > 15, treat as grams and convert to kg (e.g. 352g -> 0.352kg)
+            let isConvertedFromGram = false;
+            if (val > 15) {
+                val = val / 1000;
+                isConvertedFromGram = true;
+            }
+
+            // Push the same weight 'qty' times into sample list
+            for (let i = 0; i < qty; i++) {
+                weights.push(val);
+            }
+
+            input.value = '';
+            qtyInput.value = '1';
+            input.focus();
+
+            if (isConvertedFromGram) {
+                showToast(`${qty} ekor ayam (${(val * 1000).toFixed(0)}g → ${val.toFixed(3)} kg) berjaya ditambah.`);
+            } else {
+                showToast(`${qty} ekor ayam berberat ${val.toFixed(2)} kg berjaya ditambah.`);
+            }
+            calculateAll();
+        }
+
+        // Bulk Weights Processor
+        function processBulkWeights() {
+            const textarea = document.getElementById('inputBulkWeights');
+            const rawText = textarea.value;
+
+            if (!rawText.trim()) {
+                showToast("Sila masukkan data berat terlebih dahulu.");
+                return;
+            }
+
+            // Split by commas, spaces, or newlines and auto convert grams > 15 to kg
+            const parsedArray = rawText
+                .split(/[\s,\n]+/)
+                .map(v => {
+                    let num = parseFloat(v);
+                    if (!isNaN(num) && num > 15) {
+                        num = num / 1000; // tukar gram ke kg jika > 15
+                    }
+                    return num;
+                })
+                .filter(v => !isNaN(v) && v > 0);
+
+            if (parsedArray.length === 0) {
+                showToast("Tiada nombor berat sah ditemui dalam masukan pukal.");
+                return;
+            }
+
+            weights = weights.concat(parsedArray);
+            textarea.value = '';
+            switchTab('single');
+            showToast(`${parsedArray.length} rekod berat berjaya dimasukkan!`);
+            calculateAll();
+        }
+
+        // Delete Single Entry
+        function deleteWeight(index) {
+            const removed = weights.splice(index, 1);
+            showToast(`Rekod #${index + 1} (${removed[0].toFixed(2)} kg) telah dipadam.`);
+            calculateAll();
+        }
+
+        // Main Math Calculation Function
+        function calculateAll() {
+            const count = weights.length;
+            const tableBody = document.getElementById('weightTableBody');
+            const tableCountText = document.getElementById('tableCountText');
+
+            tableCountText.innerText = `${count} rekod`;
+
+            if (count === 0) {
+                // Reset display stats to zero/default
+                document.getElementById('statCount').innerText = '0';
+                document.getElementById('statAverage').innerText = '0.00';
+                document.getElementById('statMinMax').innerText = '0.00 / 0.00';
+                document.getElementById('statCV').innerText = '0.0%';
+                document.getElementById('statUniformity').innerText = '0.0%';
+                document.getElementById('statRange').innerText = '0.00 kg - 0.00 kg';
+                
+                const badge = document.getElementById('badgeStatus');
+                badge.innerText = 'Tiada Data';
+                badge.className = 'badge-status badge-excellent';
+
+                document.getElementById('barUnder').style.width = '0%';
+                document.getElementById('barUniform').style.width = '100%';
+                document.getElementById('barOver').style.width = '0%';
+                document.getElementById('barUnder').innerText = '0%';
+                document.getElementById('barUniform').innerText = '0%';
+                document.getElementById('barOver').innerText = '0%';
+
+                document.getElementById('countUnder').innerText = '0';
+                document.getElementById('countUniform').innerText = '0';
+                document.getElementById('countOver').innerText = '0';
+
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #94a3b8; padding: 20px;">
+                            Tiada rekod berat dimasukkan.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // 1. Min & Max
+            const min = Math.min(...weights);
+            const max = Math.max(...weights);
+
+            // 2. Average / Mean
+            const sum = weights.reduce((a, b) => a + b, 0);
+            const avg = sum / count;
+
+            // 3. Standard Deviation & CV %
+            let varianceSum = 0;
+            for (let i = 0; i < count; i++) {
+                varianceSum += Math.pow(weights[i] - avg, 2);
+            }
+            // Sample Standard Deviation (N - 1) or N if N=1
+            const stdDev = count > 1 ? Math.sqrt(varianceSum / (count - 1)) : 0;
+            const cvPercent = avg > 0 ? (stdDev / avg) * 100 : 0;
+
+            // 4. Uniformity Range (±10% from Average)
+            const rangeMin = avg * 0.90;
+            const rangeMax = avg * 1.10;
+
+            // 5. Count distribution categories
+            let underCount = 0;
+            let uniformCount = 0;
+            let overCount = 0;
+
+            weights.forEach(w => {
+                if (w < rangeMin) {
+                    underCount++;
+                } else if (w > rangeMax) {
+                    overCount++;
+                } else {
+                    uniformCount++;
+                }
+            });
+
+            const uniformityPercent = (uniformCount / count) * 100;
+            const underPercent = (underCount / count) * 100;
+            const overPercent = (overCount / count) * 100;
+
+            // Update UI Stats Cards
+            document.getElementById('statCount').innerText = count;
+            document.getElementById('statAverage').innerText = avg.toFixed(2);
+            document.getElementById('statMinMax').innerText = `${min.toFixed(2)} / ${max.toFixed(2)}`;
+            document.getElementById('statCV').innerText = `${cvPercent.toFixed(1)}%`;
+            document.getElementById('statUniformity').innerText = `${uniformityPercent.toFixed(1)}%`;
+            document.getElementById('statRange').innerText = `${rangeMin.toFixed(2)} kg - ${rangeMax.toFixed(2)} kg`;
+
+            // Update Status Badge based on standard poultry performance standards
+            const badge = document.getElementById('badgeStatus');
+            if (uniformityPercent >= 85) {
+                badge.innerText = 'Cemerlang (≥85%)';
+                badge.className = 'badge-status badge-excellent';
+            } else if (uniformityPercent >= 80) {
+                badge.innerText = 'Baik (80-84%)';
+                badge.className = 'badge-status badge-good';
+            } else if (uniformityPercent >= 70) {
+                badge.innerText = 'Sederhana (70-79%)';
+                badge.className = 'badge-status badge-moderate';
+            } else {
+                badge.innerText = 'Kurang Memuaskan (<70%)';
+                badge.className = 'badge-status badge-poor';
+            }
+
+            // Update Graphical Visual Bar
+            document.getElementById('barUnder').style.width = `${underPercent}%`;
+            document.getElementById('barUnder').innerText = underPercent > 5 ? `${underPercent.toFixed(0)}%` : '';
+            
+            document.getElementById('barUniform').style.width = `${uniformityPercent}%`;
+            document.getElementById('barUniform').innerText = uniformityPercent > 5 ? `${uniformityPercent.toFixed(0)}%` : '';
+            
+            document.getElementById('barOver').style.width = `${overPercent}%`;
+            document.getElementById('barOver').innerText = overPercent > 5 ? `${overPercent.toFixed(0)}%` : '';
+
+            document.getElementById('countUnder').innerText = `${underCount} ekor (${underPercent.toFixed(1)}%)`;
+            document.getElementById('countUniform').innerText = `${uniformCount} ekor (${uniformityPercent.toFixed(1)}%)`;
+            document.getElementById('countOver').innerText = `${overCount} ekor (${overPercent.toFixed(1)}%)`;
+
+            // Render Table Rows
+            tableBody.innerHTML = '';
+            weights.forEach((w, index) => {
+                let statusTag = '';
+                if (w < rangeMin) {
+                    statusTag = '<span style="color: #d97706; font-weight: 600;">▼ Bawah Julat (&lt; -10%)</span>';
+                } else if (w > rangeMax) {
+                    statusTag = '<span style="color: #2563eb; font-weight: 600;">▲ Atas Julat (&gt; +10%)</span>';
+                } else {
+                    statusTag = '<span style="color: #16a34a; font-weight: 600;">✓ Seragam (±10%)</span>';
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><strong>${w.toFixed(2)}</strong> kg</td>
+                    <td>${statusTag}</td>
+                    <td class="no-print" style="text-align: center;">
+                        <button class="delete-btn" onclick="deleteWeight(${index})" title="Padam rekod ini">✕</button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Load Realistic Sample Dataset
+        function loadSampleData() {
+            // Standard sample dataset of 20 chickens around 1.85 kg average
+            weights = [1.82, 1.88, 1.90, 1.75, 1.85, 1.84, 1.92, 2.05, 1.78, 1.86, 1.83, 1.89, 1.70, 1.85, 1.91, 1.87, 1.80, 1.94, 1.81, 1.88];
+            
+            document.getElementById('inputReban').value = "Reban A - Reban Contoh";
+            document.getElementById('inputUmur').value = "28";
+            updatePrintInfo();
+
+            showToast("20 sampel data contoh telah dimuatkan!");
+            calculateAll();
+        }
+
+        // Update Header printable info
+        function updatePrintInfo() {
+            const reban = document.getElementById('inputReban').value.trim();
+            const umur = document.getElementById('inputUmur').value.trim();
+
+            document.getElementById('lblReban').innerText = reban || "-";
+            document.getElementById('lblUmur').innerText = umur || "-";
+        }
+
+        // Trigger Print Window
+        function triggerPrint() {
+            if (weights.length === 0) {
+                showToast("Tiada data untuk dicetak. Sila masukkan data sampel dahulu.");
+                return;
+            }
+            updatePrintInfo();
+            window.print();
+        }
+
+        // Reset Data safely without native confirm dialog
+        function resetAllData() {
+            if (weights.length === 0) {
+                showToast("Data sudah sedia kosong.");
+                return;
+            }
+            
+            weights = [];
+            document.getElementById('inputReban').value = '';
+            document.getElementById('inputUmur').value = '';
+            updatePrintInfo();
+            calculateAll();
+            showToast("Semua data telah dikosongkan.");
+        }
+
+        // Custom Toast Messenger
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
