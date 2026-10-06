@@ -4,13 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Uniformity Ayam</title>
+    <title>Kalkulator Uniformity & Kepadatan Ayam</title>
     <style>
         :root {
             --primary: #16a34a;
             --primary-hover: #15803d;
             --primary-light: #f0fdf4;
             --secondary: #0284c7;
+            --secondary-light: #f0f9ff;
             --danger: #dc2626;
             --warning: #d97706;
             --neutral-dark: #1e293b;
@@ -37,14 +38,13 @@
         }
 
         .container {
-            max-width: 960px;
+            max-width: 1000px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
-        /* Card Component */
         .card {
             background: #ffffff;
             border-radius: var(--radius);
@@ -75,7 +75,6 @@
             opacity: 0.9;
         }
 
-        /* Form Controls & Grid */
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr;
@@ -85,6 +84,18 @@
         @media (min-width: 640px) {
             .grid-2 {
                 grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .grid-3 {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
 
@@ -117,7 +128,7 @@
             padding: 10px 14px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             outline: none;
             transition: all 0.2s ease;
             background-color: #fff;
@@ -128,7 +139,11 @@
             box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
         }
 
-        /* Buttons */
+        .input-sm {
+            padding: 6px 10px;
+            font-size: 0.88rem;
+        }
+
         .btn-group {
             display: flex;
             flex-wrap: wrap;
@@ -193,7 +208,6 @@
             width: 100%;
         }
 
-        /* Tabs Switcher */
         .tab-container {
             display: flex;
             background: #f1f5f9;
@@ -229,7 +243,6 @@
             display: block;
         }
 
-        /* Stat Cards */
         .stat-card {
             background: var(--neutral-light);
             border-radius: 10px;
@@ -249,7 +262,7 @@
         }
 
         .stat-card .value {
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             font-weight: 800;
             color: var(--neutral-dark);
         }
@@ -260,14 +273,12 @@
             margin-top: 2px;
         }
 
-        /* Highlight Card for Uniformity */
         .badge-status {
             display: inline-block;
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 700;
-            margin-top: 6px;
             text-align: center;
         }
 
@@ -276,7 +287,6 @@
         .badge-moderate { background: #fef3c7; color: #b45309; }
         .badge-poor { background: #fee2e2; color: #b91c1c; }
 
-        /* Distribution Progress Bar */
         .dist-bar-container {
             display: flex;
             height: 22px;
@@ -322,10 +332,8 @@
             display: inline-block;
         }
 
-        /* Data Table */
         .table-wrapper {
-            max-height: 280px;
-            overflow-y: auto;
+            overflow-x: auto;
             border: 1px solid var(--border-color);
             border-radius: 8px;
         }
@@ -333,8 +341,9 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             text-align: left;
+            white-space: nowrap;
         }
 
         th {
@@ -342,18 +351,23 @@
             padding: 10px 12px;
             font-weight: 600;
             color: #475569;
-            position: sticky;
-            top: 0;
             border-bottom: 1px solid var(--border-color);
         }
 
         td {
             padding: 8px 12px;
             border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
         }
 
         tr:nth-child(even) {
             background-color: #fafafa;
+        }
+
+        .partition-table input {
+            padding: 6px 8px;
+            font-size: 0.88rem;
+            min-width: 70px;
         }
 
         .delete-btn {
@@ -370,7 +384,6 @@
             background-color: #fee2e2;
         }
 
-        /* Custom Toast Notification */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -397,23 +410,21 @@
             transform: translateY(0);
         }
 
-        /* Report Info Header for Print */
         .print-only-header {
             display: none;
         }
 
-        /* CSS PRINT STYLES (A4 Optimized) */
         @media print {
             body {
                 background: white;
                 color: black;
                 padding: 0;
-                font-size: 11pt;
+                font-size: 10pt;
             }
 
             .container {
                 max-width: 100%;
-                gap: 12px;
+                gap: 10px;
             }
 
             .no-print, .tab-container, .btn-group, .delete-btn, .tab-content {
@@ -423,7 +434,7 @@
             .card {
                 border: 1px solid #ccc;
                 box-shadow: none;
-                padding: 12px;
+                padding: 10px;
                 page-break-inside: avoid;
             }
 
@@ -432,37 +443,47 @@
                 color: black !important;
                 border: 2px solid #0f766e;
                 box-shadow: none;
-                padding: 12px;
+                padding: 10px;
             }
 
             .header-card h1 {
                 color: #0f766e;
-                font-size: 1.4rem;
+                font-size: 1.3rem;
             }
 
             .print-only-header {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
                 gap: 10px;
-                margin-top: 10px;
-                padding-top: 10px;
+                margin-top: 8px;
+                padding-top: 8px;
                 border-top: 1px dashed #ccc;
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
 
             .table-wrapper {
-                max-height: none;
                 overflow: visible;
             }
 
+            table {
+                white-space: normal;
+            }
+
             th, td {
-                padding: 6px;
-                font-size: 0.85rem;
+                padding: 5px 8px;
+                font-size: 0.8rem;
             }
 
             .stat-card {
                 background: #f8fafc !important;
                 border: 1px solid #ddd;
+            }
+
+            .partition-table input {
+                border: none;
+                background: transparent;
+                padding: 0;
+                font-weight: bold;
             }
         }
     </style>
@@ -471,15 +492,13 @@
 
     <div class="container">
         
-        <!-- Header & Farm Details Card -->
         <div class="header-card">
             <h1>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
-                Kalkulator Uniformity Ayam
+                Kalkulator Uniformity & Kepadatan Ayam
             </h1>
-            <p>Sistem Analisis Keseragaman Berat Badan Reban Ayam (±10%)</p>
+            <p>Sistem Pengagihan Partition (6 Kolum) & Analisis Keseragaman Ayam (±10%)</p>
             
-            <!-- Information metadata section (Appears in UI and PDF Report) -->
             <div class="print-only-header" id="printHeaderInfo">
                 <div><strong>Nama Reban:</strong> <span id="lblReban">-</span></div>
                 <div><strong>Umur Ayam:</strong> <span id="lblUmur">-</span> Hari</div>
@@ -487,7 +506,6 @@
             </div>
         </div>
 
-        <!-- Form Metadata Input (Reban & Date) -->
         <div class="card no-print">
             <div class="grid-2">
                 <div class="form-group">
@@ -501,7 +519,73 @@
             </div>
         </div>
 
-        <!-- Data Entry Card -->
+        <div class="card">
+            <h2 style="font-size: 1.1rem; margin-bottom: 12px; color: #0284c7; display: flex; align-items: center; gap: 8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                Kalkulator Keluasan & Agihan Ayam Partition (6 Kolum)
+            </h2>
+            
+            <!-- Top Input: Total Chickens in Coop -->
+            <div style="background: #f0f9ff; padding: 14px; border-radius: 8px; border: 1px solid #bae6fd; margin-bottom: 16px;">
+                <div class="form-group">
+                    <label for="inputTotalCoopChickens" style="font-size: 0.95rem; color: #0369a1;">
+                        <strong>1. Masukkan Jumlah Keseluruhan Ayam Dalam Reban (Ekor):</strong>
+                    </label>
+                    <input type="number" id="inputTotalCoopChickens" min="1" placeholder="Cth: 3000" style="font-weight: 700; font-size: 1.1rem; color: #0369a1;" oninput="calculatePartition()">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 10px; font-size: 0.88rem; font-weight: 600; color: #475569;">
+                2. Masukkan Panjang & Lebar bagi setiap Partition (1 hingga 6):
+            </div>
+
+            <div class="table-wrapper">
+                <table class="partition-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 110px;">Partition</th>
+                            <th>Panjang (m)</th>
+                            <th>Lebar (m)</th>
+                            <th>Luas (m²)</th>
+                            <th>Agihan Ayam (Ekor)</th>
+                            <th>Kepadatan (ekor/m²)</th>
+                            <th>Status Partition</th>
+                        </tr>
+                    </thead>
+                    <tbody id="partitionTableBody">
+                        <!-- 6 Partition Rows generated via JS or hardcoded -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid-3" style="margin-top: 16px;">
+                <div class="stat-card" style="background: var(--secondary-light); border-color: #bae6fd;">
+                    <span class="title">Jumlah Luas Reban</span>
+                    <span class="value" id="statPartArea">0.00</span>
+                    <span class="subtitle">Meter Persegi (m²)</span>
+                </div>
+
+                <div class="stat-card" style="background: var(--secondary-light); border-color: #bae6fd;">
+                    <span class="title">Purata Kepadatan Reban</span>
+                    <span class="value" id="statPartDensity">0.0</span>
+                    <span class="subtitle">ekor / m²</span>
+                </div>
+
+                <div class="stat-card" style="background: var(--secondary-light); border-color: #bae6fd;">
+                    <span class="title">Jumlah Ayam Ideal Reban</span>
+                    <span class="value" id="statPartCapacity">0 - 0</span>
+                    <span class="subtitle">ekor (Standard 10-12 ekor/m²)</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 12px; font-size: 0.85rem; color: #334155; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                <div>
+                    Status Keseluruhan Reban: <strong id="lblPartStatus">-</strong>
+                </div>
+                <span id="badgePartStatus" class="badge-status badge-good">Sedia Kira</span>
+            </div>
+        </div>
+
         <div class="card no-print">
             <div class="tab-container">
                 <button class="tab-btn active" onclick="switchTab('single')">Input Masukan Data</button>
@@ -539,33 +623,28 @@
             </div>
         </div>
 
-        <!-- Summary Results Dashboard -->
         <div class="card">
             <h2 style="font-size: 1.1rem; margin-bottom: 12px; color: #334155;">Keputusan Keseragaman</h2>
             
             <div class="grid-4">
-                <!-- Sample Count -->
                 <div class="stat-card">
                     <span class="title">Jumlah Sampel</span>
                     <span class="value" id="statCount">0</span>
                     <span class="subtitle">ekor ayam</span>
                 </div>
 
-                <!-- Average Weight -->
                 <div class="stat-card">
                     <span class="title">Purata Berat</span>
                     <span class="value" id="statAverage">0.00</span>
                     <span class="subtitle">kilogram (kg)</span>
                 </div>
 
-                <!-- Min & Max -->
                 <div class="stat-card">
                     <span class="title">Min & Maks</span>
                     <span class="value" id="statMinMax">0.00 / 0.00</span>
                     <span class="subtitle">kg (Terendah / Tertinggi)</span>
                 </div>
 
-                <!-- CV % -->
                 <div class="stat-card">
                     <span class="title">Nilai CV (%)</span>
                     <span class="value" id="statCV">0.0%</span>
@@ -573,7 +652,6 @@
                 </div>
             </div>
 
-            <!-- Main Uniformity Score Highlight -->
             <div style="margin-top: 16px; padding: 16px; background: var(--primary-light); border-radius: 10px; border: 1px solid #bbf7d0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;">
                 <div>
                     <div style="font-size: 0.85rem; font-weight: 700; color: #166534; text-transform: uppercase;">Keseragaman (Uniformity)</div>
@@ -587,7 +665,6 @@
                 </div>
             </div>
 
-            <!-- Distribution Visual Bar -->
             <div style="margin-top: 16px;">
                 <div style="font-size: 0.85rem; font-weight: 600; color: #475569;">Agihan Berat Sampel:</div>
                 <div class="dist-bar-container">
@@ -603,14 +680,13 @@
             </div>
         </div>
 
-        <!-- Sample List Table -->
         <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <h2 style="font-size: 1.1rem; color: #334155;">Senarai Berat Sampel</h2>
                 <span style="font-size: 0.85rem; color: #64748b;" id="tableCountText">0 rekod</span>
             </div>
 
-            <div class="table-wrapper">
+            <div class="table-wrapper" style="max-height: 280px; overflow-y: auto;">
                 <table>
                     <thead>
                         <tr>
@@ -631,7 +707,6 @@
             </div>
         </div>
 
-        <!-- Global Action Buttons -->
         <div class="btn-group no-print">
             <button class="btn btn-primary" onclick="calculateAll()">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -657,16 +732,173 @@
     <div id="toast" class="toast">Notifikasi</div>
 
     <script>
-        // State Array to hold sample weights
         let weights = [];
 
-        // Initialize default dates
         window.onload = function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('lblTarikh').innerText = today;
+            
+            // Generate 6 partition input rows dynamically
+            buildPartitionRows();
         };
 
-        // Tab Switcher Logic
+        function buildPartitionRows() {
+            const tbody = document.getElementById('partitionTableBody');
+            tbody.innerHTML = '';
+
+            for (let i = 1; i <= 6; i++) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>Partition ${i}</strong></td>
+                    <td>
+                        <input type="number" id="partL_${i}" step="any" min="0" placeholder="0.0" oninput="calculatePartition()">
+                    </td>
+                    <td>
+                        <input type="number" id="partW_${i}" step="any" min="0" placeholder="0.0" oninput="calculatePartition()">
+                    </td>
+                    <td><span id="partArea_${i}" style="font-weight: 600;">0.00</span></td>
+                    <td><strong id="partChickens_${i}" style="color: #0284c7; font-size: 1rem;">0</strong></td>
+                    <td><span id="partDensity_${i}">0.0</span></td>
+                    <td><span id="partBadge_${i}" class="badge-status badge-good" style="font-size: 0.75rem;">-</span></td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        function calculatePartition() {
+            const totalCoopChickens = parseFloat(document.getElementById('inputTotalCoopChickens').value) || 0;
+            
+            let areas = [];
+            let totalArea = 0;
+
+            // 1. Calculate area for each of the 6 partitions
+            for (let i = 1; i <= 6; i++) {
+                const l = parseFloat(document.getElementById(`partL_${i}`).value) || 0;
+                const w = parseFloat(document.getElementById(`partW_${i}`).value) || 0;
+                const area = (l > 0 && w > 0) ? (l * w) : 0;
+                
+                areas.push(area);
+                totalArea += area;
+                
+                document.getElementById(`partArea_${i}`).innerText = area > 0 ? area.toFixed(2) : "0.00";
+            }
+
+            const areaEl = document.getElementById('statPartArea');
+            const densityEl = document.getElementById('statPartDensity');
+            const capacityEl = document.getElementById('statPartCapacity');
+            const statusLbl = document.getElementById('lblPartStatus');
+            const statusBadge = document.getElementById('badgePartStatus');
+
+            if (totalArea <= 0) {
+                for (let i = 1; i <= 6; i++) {
+                    document.getElementById(`partChickens_${i}`).innerText = "0";
+                    document.getElementById(`partDensity_${i}`).innerText = "0.0";
+                    const b = document.getElementById(`partBadge_${i}`);
+                    b.innerText = "-";
+                    b.className = "badge-status badge-good";
+                }
+                areaEl.innerText = "0.00";
+                densityEl.innerText = "0.0";
+                capacityEl.innerText = "0 - 0";
+                statusLbl.innerText = "Sila masukkan panjang dan lebar bagi sekurang-kurangnya 1 partition.";
+                statusBadge.innerText = "Sedia Kira";
+                statusBadge.className = "badge-status badge-good";
+                return;
+            }
+
+            // 2. Total Area & Capacity
+            areaEl.innerText = totalArea.toFixed(2);
+            const idealMinTotal = Math.floor(totalArea * 10);
+            const idealMaxTotal = Math.floor(totalArea * 12);
+            capacityEl.innerText = `${idealMinTotal} - ${idealMaxTotal}`;
+
+            // 3. Proportional chicken distribution logic
+            let allocatedChickens = new Array(6).fill(0);
+
+            if (totalCoopChickens > 0) {
+                let unrounded = areas.map(a => (a / totalArea) * totalCoopChickens);
+                let integerParts = unrounded.map(u => Math.floor(u));
+                let allocatedSum = integerParts.reduce((a, b) => a + b, 0);
+                let remainder = totalCoopChickens - allocatedSum;
+
+                // Sort fractions to distribute remaining odd chickens
+                let remaindersList = unrounded.map((u, idx) => ({ idx, frac: u - integerParts[idx] }));
+                remaindersList.sort((a, b) => b.frac - a.frac);
+
+                for (let i = 0; i < remainder; i++) {
+                    integerParts[remaindersList[i].idx] += 1;
+                }
+                allocatedChickens = integerParts;
+            }
+
+            // 4. Update each partition UI details
+            for (let i = 0; i < 6; i++) {
+                const pNum = i + 1;
+                const pArea = areas[i];
+                const pChickens = allocatedChickens[i];
+                const pChickensEl = document.getElementById(`partChickens_${pNum}`);
+                const pDensityEl = document.getElementById(`partDensity_${pNum}`);
+                const pBadge = document.getElementById(`partBadge_${pNum}`);
+
+                if (pArea > 0) {
+                    pChickensEl.innerText = pChickens;
+                    
+                    if (pChickens > 0) {
+                        const pDensity = pChickens / pArea;
+                        pDensityEl.innerText = pDensity.toFixed(1);
+
+                        if (pDensity <= 10) {
+                            pBadge.innerText = "Optimal";
+                            pBadge.className = "badge-status badge-excellent";
+                        } else if (pDensity <= 12) {
+                            pBadge.innerText = "Sederhana";
+                            pBadge.className = "badge-status badge-good";
+                        } else {
+                            pBadge.innerText = "Padat";
+                            pBadge.className = "badge-status badge-poor";
+                        }
+                    } else {
+                        const idealMinP = Math.floor(pArea * 10);
+                        const idealMaxP = Math.floor(pArea * 12);
+                        pDensityEl.innerText = "0.0";
+                        pBadge.innerText = `Sesuai ${idealMinP}-${idealMaxP}`;
+                        pBadge.className = "badge-status badge-good";
+                    }
+                } else {
+                    pChickensEl.innerText = "0";
+                    pDensityEl.innerText = "0.0";
+                    pBadge.innerText = "-";
+                    pBadge.className = "badge-status badge-good";
+                }
+            }
+
+            // 5. Total Coop Density Status
+            if (totalCoopChickens > 0) {
+                const overallDensity = totalCoopChickens / totalArea;
+                densityEl.innerText = overallDensity.toFixed(1);
+
+                if (overallDensity <= 10) {
+                    statusLbl.innerText = `Kepadatan Reban Optimal (${overallDensity.toFixed(1)} ekor/m² ≤ 10)`;
+                    statusBadge.innerText = "Optimal";
+                    statusBadge.className = "badge-status badge-excellent";
+                } else if (overallDensity <= 12) {
+                    statusLbl.innerText = `Kepadatan Reban Sederhana (${overallDensity.toFixed(1)} ekor/m² - Standard 10-12)`;
+                    statusBadge.innerText = "Sederhana";
+                    statusBadge.className = "badge-status badge-good";
+                } else {
+                    const extra = totalCoopChickens - idealMaxTotal;
+                    statusLbl.innerText = `Reban Terlalu Padat! (${overallDensity.toFixed(1)} ekor/m² > 12). Berlebihan ~${extra} ekor.`;
+                    statusBadge.innerText = "Padat";
+                    statusBadge.className = "badge-status badge-poor";
+                }
+            } else {
+                densityEl.innerText = "0.0";
+                statusLbl.innerText = `Jumlah keluasan reban (${totalArea.toFixed(2)} m²) sesuai untuk ${idealMinTotal} - ${idealMaxTotal} ekor ayam.`;
+                statusBadge.innerText = "Keluasan Dikira";
+                statusBadge.className = "badge-status badge-good";
+            }
+        }
+
         function switchTab(tabName) {
             const buttons = document.querySelectorAll('.tab-btn');
             const contents = document.querySelectorAll('.tab-content');
@@ -685,7 +917,6 @@
             }
         }
 
-        // Single Weight & Quantity Input Handler
         function addSingleWeight(event) {
             event.preventDefault();
             const input = document.getElementById('inputSingleWeight');
@@ -704,14 +935,12 @@
                 return;
             }
 
-            // Smart conversion: If value > 15, treat as grams and convert to kg (e.g. 352g -> 0.352kg)
             let isConvertedFromGram = false;
             if (val > 15) {
                 val = val / 1000;
                 isConvertedFromGram = true;
             }
 
-            // Push the same weight 'qty' times into sample list
             for (let i = 0; i < qty; i++) {
                 weights.push(val);
             }
@@ -728,7 +957,6 @@
             calculateAll();
         }
 
-        // Bulk Weights Processor
         function processBulkWeights() {
             const textarea = document.getElementById('inputBulkWeights');
             const rawText = textarea.value;
@@ -738,13 +966,12 @@
                 return;
             }
 
-            // Split by commas, spaces, or newlines and auto convert grams > 15 to kg
             const parsedArray = rawText
                 .split(/[\s,\n]+/)
                 .map(v => {
                     let num = parseFloat(v);
                     if (!isNaN(num) && num > 15) {
-                        num = num / 1000; // tukar gram ke kg jika > 15
+                        num = num / 1000;
                     }
                     return num;
                 })
@@ -762,14 +989,12 @@
             calculateAll();
         }
 
-        // Delete Single Entry
         function deleteWeight(index) {
             const removed = weights.splice(index, 1);
             showToast(`Rekod #${index + 1} (${removed[0].toFixed(2)} kg) telah dipadam.`);
             calculateAll();
         }
 
-        // Main Math Calculation Function
         function calculateAll() {
             const count = weights.length;
             const tableBody = document.getElementById('weightTableBody');
@@ -778,7 +1003,6 @@
             tableCountText.innerText = `${count} rekod`;
 
             if (count === 0) {
-                // Reset display stats to zero/default
                 document.getElementById('statCount').innerText = '0';
                 document.getElementById('statAverage').innerText = '0.00';
                 document.getElementById('statMinMax').innerText = '0.00 / 0.00';
@@ -811,28 +1035,21 @@
                 return;
             }
 
-            // 1. Min & Max
             const min = Math.min(...weights);
             const max = Math.max(...weights);
-
-            // 2. Average / Mean
             const sum = weights.reduce((a, b) => a + b, 0);
             const avg = sum / count;
 
-            // 3. Standard Deviation & CV %
             let varianceSum = 0;
             for (let i = 0; i < count; i++) {
                 varianceSum += Math.pow(weights[i] - avg, 2);
             }
-            // Sample Standard Deviation (N - 1) or N if N=1
             const stdDev = count > 1 ? Math.sqrt(varianceSum / (count - 1)) : 0;
             const cvPercent = avg > 0 ? (stdDev / avg) * 100 : 0;
 
-            // 4. Uniformity Range (±10% from Average)
             const rangeMin = avg * 0.90;
             const rangeMax = avg * 1.10;
 
-            // 5. Count distribution categories
             let underCount = 0;
             let uniformCount = 0;
             let overCount = 0;
@@ -851,7 +1068,6 @@
             const underPercent = (underCount / count) * 100;
             const overPercent = (overCount / count) * 100;
 
-            // Update UI Stats Cards
             document.getElementById('statCount').innerText = count;
             document.getElementById('statAverage').innerText = avg.toFixed(2);
             document.getElementById('statMinMax').innerText = `${min.toFixed(2)} / ${max.toFixed(2)}`;
@@ -859,7 +1075,6 @@
             document.getElementById('statUniformity').innerText = `${uniformityPercent.toFixed(1)}%`;
             document.getElementById('statRange').innerText = `${rangeMin.toFixed(2)} kg - ${rangeMax.toFixed(2)} kg`;
 
-            // Update Status Badge based on standard poultry performance standards
             const badge = document.getElementById('badgeStatus');
             if (uniformityPercent >= 85) {
                 badge.innerText = 'Cemerlang (≥85%)';
@@ -875,7 +1090,6 @@
                 badge.className = 'badge-status badge-poor';
             }
 
-            // Update Graphical Visual Bar
             document.getElementById('barUnder').style.width = `${underPercent}%`;
             document.getElementById('barUnder').innerText = underPercent > 5 ? `${underPercent.toFixed(0)}%` : '';
             
@@ -889,7 +1103,6 @@
             document.getElementById('countUniform').innerText = `${uniformCount} ekor (${uniformityPercent.toFixed(1)}%)`;
             document.getElementById('countOver').innerText = `${overCount} ekor (${overPercent.toFixed(1)}%)`;
 
-            // Render Table Rows
             tableBody.innerHTML = '';
             weights.forEach((w, index) => {
                 let statusTag = '';
@@ -914,20 +1127,35 @@
             });
         }
 
-        // Load Realistic Sample Dataset
         function loadSampleData() {
-            // Standard sample dataset of 20 chickens around 1.85 kg average
             weights = [1.82, 1.88, 1.90, 1.75, 1.85, 1.84, 1.92, 2.05, 1.78, 1.86, 1.83, 1.89, 1.70, 1.85, 1.91, 1.87, 1.80, 1.94, 1.81, 1.88];
             
             document.getElementById('inputReban').value = "Reban A - Reban Contoh";
             document.getElementById('inputUmur').value = "28";
-            updatePrintInfo();
+            
+            document.getElementById('inputTotalCoopChickens').value = "3000";
 
-            showToast("20 sampel data contoh telah dimuatkan!");
+            // Sample dimensions for 6 partitions
+            const sampleDims = [
+                { l: 10, w: 5 },
+                { l: 10, w: 5 },
+                { l: 10, w: 5 },
+                { l: 10, w: 5 },
+                { l: 10, w: 5 },
+                { l: 10, w: 5 }
+            ];
+
+            sampleDims.forEach((d, idx) => {
+                document.getElementById(`partL_${idx + 1}`).value = d.l;
+                document.getElementById(`partW_${idx + 1}`).value = d.w;
+            });
+
+            calculatePartition();
+            updatePrintInfo();
+            showToast("Data contoh 6 partition & uniformity telah dimuatkan!");
             calculateAll();
         }
 
-        // Update Header printable info
         function updatePrintInfo() {
             const reban = document.getElementById('inputReban').value.trim();
             const umur = document.getElementById('inputUmur').value.trim();
@@ -936,32 +1164,28 @@
             document.getElementById('lblUmur').innerText = umur || "-";
         }
 
-        // Trigger Print Window
         function triggerPrint() {
-            if (weights.length === 0) {
-                showToast("Tiada data untuk dicetak. Sila masukkan data sampel dahulu.");
-                return;
-            }
             updatePrintInfo();
             window.print();
         }
 
-        // Reset Data safely without native confirm dialog
         function resetAllData() {
-            if (weights.length === 0) {
-                showToast("Data sudah sedia kosong.");
-                return;
-            }
-            
             weights = [];
             document.getElementById('inputReban').value = '';
             document.getElementById('inputUmur').value = '';
+            document.getElementById('inputTotalCoopChickens').value = '';
+            
+            for (let i = 1; i <= 6; i++) {
+                document.getElementById(`partL_${i}`).value = '';
+                document.getElementById(`partW_${i}`).value = '';
+            }
+            
+            calculatePartition();
             updatePrintInfo();
             calculateAll();
             showToast("Semua data telah dikosongkan.");
         }
 
-        // Custom Toast Messenger
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.innerText = message;
