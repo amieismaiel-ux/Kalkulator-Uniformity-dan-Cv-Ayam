@@ -542,90 +542,156 @@ oninput="calculateFeedSpace()"
 </div>
 
 <table class="feed-table">
+  <thead>
+    <tr>
+      <th>Bilik</th>
+      <th>Panjang Feeder (cm)</th>
+      <th>Ayam Actual</th>
+      <th>Ayam Sepatutnya</th>
+    </tr>
+  </thead>
 
-<thead>
-<tr>
-<th>Line</th>
-<th>Panjang Feeder (cm)</th>
-</tr>
-</thead>
+  <tbody>
 
-<tbody>
+    <tr>
+      <td>Bilik 1</td>
+      <td>
+        <input
+          type="number"
+          id="feedLine1"
+          placeholder="7315.2"
+          oninput="calculateFeedSpace()"
+        >
+      </td>
+      <td>
+        <input
+          type="number"
+          id="actualBirds1"
+          placeholder="Actual"
+          oninput="calculateFeedSpace()"
+        >
+      </td>
+      <td>
+        <strong id="idealBirds1">0</strong>
+      </td>
+    </tr>
 
-<tr>
-<td>Line 1</td>
-<td>
-<input
-type="number"
-id="feedLine1"
-placeholder="Contoh: 7315.2"
-oninput="calculateFeedSpace()"
->
-</td>
-</tr>
+    <tr>
+      <td>Bilik 2</td>
+      <td>
+        <input
+          type="number"
+          id="feedLine2"
+          placeholder="10972.8"
+          oninput="calculateFeedSpace()"
+        >
+      </td>
+      <td>
+        <input
+          type="number"
+          id="actualBirds2"
+          placeholder="Actual"
+          oninput="calculateFeedSpace()"
+        >
+      </td>
+      <td>
+        <strong id="idealBirds2">0</strong>
+      </td>
+    </tr>
 
-<tr>
-<td>Line 2</td>
-<td>
-<input
-type="number"
-id="feedLine2"
-placeholder="Contoh: 10972.8"
-oninput="calculateFeedSpace()"
->
-</td>
-</tr>
+    <tr>
+      <td>Bilik 3</td>
+      <td>
+        <input
+          type="number"
+          id="feedLine3"
+          placeholder="12435.84"
+          oninput="calculateFeedSpace()"
+        >
+      </td>
+      <td>
+        <input
+          type="number"
+          id="actualBirds3"
+          placeholder="Actual"
+          oninput="calculateFeedSpace()"
+        >
+      </td>
+      <td>
+        <strong id="idealBirds3">0</strong>
+      </td>
+    </tr>
 
-<tr>
-<td>Line 3</td>
-<td>
-<input
-type="number"
-id="feedLine3"
-placeholder="Contoh: 12435.84"
-oninput="calculateFeedSpace()"
->
-</td>
-</tr>
+    <tr>
+      <td>Bilik 4</td>
+      <td>
+        <input
+          type="number"
+          id="feedLine4"
+          placeholder="7315.2"
+          oninput="calculateFeedSpace()"
+        >
+      </td>
+      <td>
+        <input
+          type="number"
+          id="actualBirds4"
+          placeholder="Actual"
+          oninput="calculateFeedSpace()"
+        >
+      </td>
+      <td>
+        <strong id="idealBirds4">0</strong>
+      </td>
+    </tr>
 
-<tr>
-<td>Line 4</td>
-<td>
-<input
-type="number"
-id="feedLine4"
-placeholder="Contoh: 7315.2"
-oninput="calculateFeedSpace()"
->
-</td>
-</tr>
+    <tr>
+      <td>Bilik 5</td>
+      <td>
+        <input
+          type="number"
+          id="feedLine5"
+          placeholder="10972.8"
+          oninput="calculateFeedSpace()"
+        >
+      </td>
+      <td>
+        <input
+          type="number"
+          id="actualBirds5"
+          placeholder="Actual"
+          oninput="calculateFeedSpace()"
+        >
+      </td>
+      <td>
+        <strong id="idealBirds5">0</strong>
+      </td>
+    </tr>
 
-<tr>
-<td>Line 5</td>
-<td>
-<input
-type="number"
-id="feedLine5"
-placeholder="Contoh: 10972.8"
-oninput="calculateFeedSpace()"
->
-</td>
-</tr>
+    <tr>
+      <td>Bilik 6</td>
+      <td>
+        <input
+          type="number"
+          id="feedLine6"
+          placeholder="10972.8"
+          oninput="calculateFeedSpace()"
+        >
+      </td>
+      <td>
+        <input
+          type="number"
+          id="actualBirds6"
+          placeholder="Actual"
+          oninput="calculateFeedSpace()"
+        >
+      </td>
+      <td>
+        <strong id="idealBirds6">0</strong>
+      </td>
+    </tr>
 
-<tr>
-<td>Line 6</td>
-<td>
-<input
-type="number"
-id="feedLine6"
-placeholder="Contoh: 10972.8"
-oninput="calculateFeedSpace()"
->
-</td>
-</tr>
-
-</tbody>
-
+  </tbody>
 </table>
 
 <div class="results">
@@ -2421,7 +2487,69 @@ function calculateFeedSpace() {
     }
 }
 
-/* ================= TAMAT AUTO KIRA FEED SPACE ================= */</script>
+/* ================= TAMAT AUTO KIRA FEED SPACE ================= */ /* ================= AUTO KIRA BILIK & AYAM ================= */
+
+function calculateBilikAyam() {
+
+    const standardCmPerBird = 8;
+
+    let totalFeeder = 0;
+
+    for (let i = 1; i <= 6; i++) {
+
+        const feederEl = document.getElementById("feedLine" + i);
+        const sepatutnyaEl = document.getElementById("bilikIdeal" + i);
+
+        const feeder = Number(feederEl?.value) || 0;
+
+        totalFeeder += feeder;
+
+        if (sepatutnyaEl) {
+            const ideal = feeder / standardCmPerBird;
+
+            sepatutnyaEl.textContent =
+                ideal > 0 ? Math.round(ideal).toLocaleString("ms-MY") : "0";
+        }
+    }
+
+    const birdsEl = document.getElementById("feedBirds");
+    const birds = Number(birdsEl?.value) || 0;
+
+    const totalEl = document.getElementById("feedTotalLength");
+    const spaceEl = document.getElementById("feedSpacePerBird");
+
+    if (totalEl) {
+        totalEl.textContent =
+            totalFeeder.toFixed(2) + " cm";
+    }
+
+    if (spaceEl) {
+        spaceEl.textContent =
+            birds > 0
+                ? (totalFeeder / birds).toFixed(2) + " cm/ekor"
+                : "0.00 cm/ekor";
+    }
+}
+
+/* Kira apabila mana-mana input berubah */
+document.addEventListener("input", function(event) {
+
+    if (
+        event.target.matches(
+            "#feedBirds, #feedLine1, #feedLine2, #feedLine3, #feedLine4, #feedLine5, #feedLine6"
+        )
+    ) {
+        calculateBilikAyam();
+    }
+
+});
+
+/* Kira apabila halaman dibuka */
+window.addEventListener("load", function() {
+    setTimeout(calculateBilikAyam, 300);
+});
+
+/* ================= TAMAT AUTO KIRA BILIK ================= */</script>
 
 </body>
     </html>
