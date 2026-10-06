@@ -1,1560 +1,2138 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ms">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="manifest.json">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#16a34a">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default"><title>Kalkulator Uniformity & Kepadatan Ayam</title>
-    <style>
-        :root {
-            --primary: #16a34a;
-            --primary-hover: #15803d;
-            --primary-light: #f0fdf4;
-            --secondary: #0284c7;
-            --secondary-light: #f0f9ff;
-            --danger: #dc2626;
-            --warning: #d97706;
-            --neutral-dark: #1e293b;
-            --neutral-light: #f8fafc;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --radius: 12px;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-
-        body {
-            background-color: #f1f5f9;
-            color: var(--neutral-dark);
-            line-height: 1.5;
-            padding: 16px;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .card {
-            background: #ffffff;
-            border-radius: var(--radius);
-            padding: 20px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
-        }
-
-        .header-card {
-            background: linear-gradient(135deg, #0f766e 0%, #16a34a 100%);
-            color: white;
-            padding: 24px 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-md);
-        }
-
-        .header-card h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .header-card p {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-
-        @media (min-width: 640px) {
-            .grid-2 {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
-
-        @media (min-width: 640px) {
-            .grid-3 {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        @media (min-width: 768px) {
-            .grid-4 {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #475569;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.2s ease;
-            background-color: #fff;
-        }
-
-        input:focus, textarea:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
-        }
-
-        .input-sm {
-            padding: 6px 10px;
-            font-size: 0.88rem;
-        }
-
-        .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 18px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            touch-action: manipulation;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .btn-secondary {
-            background-color: var(--secondary);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background-color: #0369a1;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: #475569;
-        }
-
-        .btn-outline:hover {
-            background-color: #f1f5f9;
-            color: var(--neutral-dark);
-        }
-
-        .btn-danger {
-            background-color: #ef4444;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: var(--danger);
-        }
-
-        .btn-full {
-            width: 100%;
-        }
-
-        .tab-container {
-            display: flex;
-            background: #f1f5f9;
-            padding: 4px;
-            border-radius: 10px;
-            margin-bottom: 16px;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 8px 12px;
-            border: none;
-            background: transparent;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #64748b;
-            border-radius: 7px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .tab-btn.active {
-            background: #ffffff;
-            color: var(--primary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .stat-card {
-            background: var(--neutral-light);
-            border-radius: 10px;
-            padding: 14px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .stat-card .title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #64748b;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .stat-card .value {
-            font-size: 1.35rem;
-            font-weight: 800;
-            color: var(--neutral-dark);
-        }
-
-        .stat-card .subtitle {
-            font-size: 0.75rem;
-            color: #64748b;
-            margin-top: 2px;
-        }
-
-        .badge-status {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-align: center;
-        }
-
-        .badge-excellent { background: #dcfce7; color: #15803d; }
-        .badge-good { background: #e0f2fe; color: #0369a1; }
-        .badge-moderate { background: #fef3c7; color: #b45309; }
-        .badge-poor { background: #fee2e2; color: #b91c1c; }
-
-        .dist-bar-container {
-            display: flex;
-            height: 22px;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #e2e8f0;
-            margin: 12px 0;
-        }
-
-        .dist-segment {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 700;
-            transition: width 0.4s ease;
-        }
-
-        .seg-under { background-color: #f59e0b; }
-        .seg-uniform { background-color: #10b981; }
-        .seg-over { background-color: #3b82f6; }
-
-        .dist-legend {
-            display: flex;
-            justify-content: space-around;
-            gap: 8px;
-            font-size: 0.8rem;
-            color: #475569;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.88rem;
-            text-align: left;
-            white-space: nowrap;
-        }
-
-        th {
-            background-color: #f8fafc;
-            padding: 10px 12px;
-            font-weight: 600;
-            color: #475569;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        td {
-            padding: 8px 12px;
-            border-bottom: 1px solid var(--border-color);
-            vertical-align: middle;
-        }
-
-        tr:nth-child(even) {
-            background-color: #fafafa;
-        }
-
-        .partition-table input {
-            padding: 6px 8px;
-            font-size: 0.88rem;
-            min-width: 70px;
-        }
-
-        .delete-btn {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
-            padding: 4px;
-            font-weight: bold;
-            border-radius: 4px;
-        }
-
-        .delete-btn:hover {
-            background-color: #fee2e2;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            left: 20px;
-            max-width: 400px;
-            margin: 0 auto;
-            background: var(--neutral-dark);
-            color: white;
-            padding: 12px 18px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            box-shadow: var(--shadow-md);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-            pointer-events: none;
-            z-index: 1000;
-            text-align: center;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .print-only-header {
-            display: none;
-        }
-
-        @media print {
-            body {
-                background: white;
-                color: black;
-                padding: 0;
-                font-size: 10pt;
-            }
-
-            .container {
-                max-width: 100%;
-                gap: 10px;
-            }
-
-            .no-print, .tab-container, .btn-group, .delete-btn, .tab-content {
-                display: none !important;
-            }
-
-            .card {
-                border: 1px solid #ccc;
-                box-shadow: none;
-                padding: 10px;
-                page-break-inside: avoid;
-            }
-
-            .header-card {
-                background: none !important;
-                color: black !important;
-                border: 2px solid #0f766e;
-                box-shadow: none;
-                padding: 10px;
-            }
-
-            .header-card h1 {
-                color: #0f766e;
-                font-size: 1.3rem;
-            }
-
-            .print-only-header {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 10px;
-                margin-top: 8px;
-                padding-top: 8px;
-                border-top: 1px dashed #ccc;
-                font-size: 0.85rem;
-            }
-
-            .table-wrapper {
-                overflow: visible;
-            }
-
-            table {
-                white-space: normal;
-            }
-
-            th, td {
-                padding: 5px 8px;
-                font-size: 0.8rem;
-            }
-
-            .stat-card {
-                background: #f8fafc !important;
-                border: 1px solid #ddd;
-            }
-
-            .partition-table input {
-                border: none;
-                background: transparent;
-                padding: 0;
-                font-weight: bold;
-            }
-        }
-    </style>
+<link rel="manifest" href="manifest.json">
+
+<title>Kalkulator Uniformity & CV Ayam</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+background:#f1f5f9;
+color:#334155;
+font-family:Arial,sans-serif
+}
+
+.wrap{
+max-width:900px;
+margin:auto;
+padding:14px
+}
+
+.head{
+background:linear-gradient(135deg,#166534,#16a34a);
+color:white;
+padding:22px;
+border-radius:20px;
+margin-bottom:16px
+}
+
+.head h1{
+margin:0 0 6px;
+font-size:24px
+}
+
+.card{
+background:white;
+border-radius:18px;
+padding:18px;
+margin-bottom:16px;
+box-shadow:0 4px 16px #0f172a12
+}
+
+h2{
+margin:0 0 15px
+}
+
+label{
+display:block;
+font-weight:700;
+margin-bottom:7px
+}
+
+input,textarea{
+width:100%;
+padding:13px;
+border:1px solid #cbd5e1;
+border-radius:12px;
+font-size:16px
+}
+
+button{
+border:0;
+border-radius:12px;
+padding:13px 16px;
+font-weight:800;
+font-size:15px;
+cursor:pointer
+}
+
+.g{
+background:#16a34a;
+color:white
+}
+
+.b{
+background:#2563eb;
+color:white
+}
+
+.r{
+background:#ef4444;
+color:white
+}
+
+.x{
+background:#e2e8f0;
+color:#334155
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px
+}
+
+.row{
+display:flex;
+gap:10px;
+align-items:end
+}
+
+.row>div:first-child{
+flex:1
+}
+
+.qty{
+width:150px
+}
+
+.tabs{
+display:flex;
+background:#f1f5f9;
+padding:5px;
+border-radius:14px;
+margin-bottom:14px
+}
+
+.tab{
+flex:1;
+background:transparent;
+color:#64748b
+}
+
+.active{
+background:white;
+color:#16a34a;
+box-shadow:0 2px 8px #0001
+}
+
+.hidden{
+display:none
+}
+
+.weights{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(100px,1fr));
+gap:7px;
+margin-top:12px
+}
+
+.weight{
+background:#f0fdf4;
+border:1px solid #bbf7d0;
+padding:8px;
+border-radius:9px;
+text-align:center
+}
+
+.empty{
+text-align:center;
+color:#94a3b8;
+padding:18px
+}
+
+.results{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px
+}
+
+.box{
+background:#f8fafc;
+border:1px solid #e2e8f0;
+padding:14px;
+border-radius:13px
+}
+
+.lab{
+font-size:12px;
+color:#64748b;
+font-weight:800
+}
+
+.val{
+font-size:24px;
+font-weight:900;
+margin-top:4px
+}
+
+.hero{
+margin-top:12px;
+background:#ecfdf5;
+border:1px solid #86efac;
+padding:18px;
+border-radius:14px;
+text-align:center
+}
+
+.hero .val{
+font-size:34px;
+color:#15803d
+}
+
+.range{
+margin-top:8px;
+background:#eff6ff;
+padding:10px;
+border-radius:10px;
+color:#1e40af;
+font-size:13px
+}
+
+.tablewrap{
+overflow:auto
+}
+
+.ptable,
+.history{
+width:100%;
+border-collapse:collapse;
+min-width:650px
+}
+
+.ptable th,
+.ptable td,
+.history th,
+.history td{
+padding:9px;
+border-bottom:1px solid #e2e8f0;
+text-align:center
+}
+
+.ptable th,
+.history th{
+background:#f8fafc
+}
+
+.ptable input{
+min-width:80px;
+padding:8px
+}
+
+.badge{
+display:inline-block;
+background:#dcfce7;
+color:#15803d;
+padding:8px 12px;
+border-radius:999px;
+font-weight:800
+}
+
+.status{
+display:flex;
+justify-content:space-between;
+gap:10px;
+align-items:center;
+margin-top:12px
+}
+
+@media(max-width:650px){
+
+.grid{
+grid-template-columns:1fr
+}
+
+.row{
+align-items:stretch
+}
+
+.qty{
+width:auto
+}
+
+.results{
+grid-template-columns:1fr 1fr
+}
+
+}
+</style>
 </head>
+
 <body>
 
-    <div class="container">
-        
-        <div class="header-card">
-            <h1>
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
-                Kalkulator Uniformity & Kepadatan Ayam
-            </h1>
-            <p>Sistem Pengagihan Partition (6 Kolum) & Analisis Keseragaman Ayam (±10%)</p>
-            
-            <div class="print-only-header" id="printHeaderInfo">
-                <div><strong>Nama Reban:</strong> <span id="lblReban">-</span></div>
-                <div><strong>Umur Ayam:</strong> <span id="lblUmur">-</span> Hari</div>
-                <div><strong>Tarikh Ujian:</strong> <span id="lblTarikh">-</span></div>
-            </div>
-        </div>
+<div class="wrap">
 
-        <div class="card no-print">
-            <div class="grid-2">
-                <div class="form-group">
-                    <label for="inputReban">Nama / Kod Reban</label>
-                    <input type="text" id="inputReban" placeholder="Cth: Reban A1 / Block 2" oninput="updatePrintInfo()">
-                </div>
-                <div class="form-group">
-                    <label for="inputUmur">Umur Ayam (Hari)</label>
-                    <input type="number" id="inputUmur" placeholder="Cth: 28" oninput="updatePrintInfo()">
-                </div>
-            </div>
-        </div>
+<!-- HEADER -->
 
-        <div class="card">
-            <h2 style="font-size: 1.1rem; margin-bottom: 12px; color: #0284c7; display: flex; align-items: center; gap: 8px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                Kalkulator Keluasan & Agihan Ayam Partition (6 Kolum)
-            </h2>
-            
-            <!-- Top Input: Total Chickens in Coop -->
-            <div style="background: #f0f9ff; padding: 14px; border-radius: 8px; border: 1px solid #bae6fd; margin-bottom: 16px;">
-                <div class="form-group">
-                    <label for="inputTotalCoopChickens" style="font-size: 0.95rem; color: #0369a1;">
-                        <strong>1. Masukkan Jumlah Keseluruhan Ayam Dalam Reban (Ekor):</strong>
-                    </label>
-                    <input type="number" id="inputTotalCoopChickens" min="1" placeholder="Cth: 3000" style="font-weight: 700; font-size: 1.1rem; color: #0369a1;" oninput="calculatePartition()">
-                </div>
-            </div>
+<div class="head">
 
-            <div style="margin-bottom: 10px; font-size: 0.88rem; font-weight: 600; color: #475569;">
-                2. Masukkan Panjang & Lebar bagi setiap Partition (1 hingga 6):
-            </div>
+<h1>🐔 Kalkulator Uniformity & CV Ayam</h1>
 
-            <div class="table-wrapper">
-                <table class="partition-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 110px;">Partition</th>
-                            <th>Panjang (m)</th>
-                            <th>Lebar (m)</th>
-                            <th>Luas (m²)</th>
-                            <th>Agihan Ayam (Ekor)</th>
-                            <th>Kepadatan (ekor/m²)</th>
-                            <th>Status Partition</th>
-                        </tr>
-                    </thead>
-                    <tbody id="partitionTableBody">
-                        <!-- 6 Partition Rows generated via JS or hardcoded -->
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="grid-3" style="margin-top: 16px;">
-                <div class="stat-card" style="background: var(--secondary-light); border-color: #bae6fd;">
-                    <span class="title">Jumlah Luas Reban</span>
-                    <span class="value" id="statPartArea">0.00</span>
-                    <span class="subtitle">Meter Persegi (m²)</span>
-                </div>
-
-                <div class="stat-card" style="background: var(--secondary-light); border-color: #bae6fd;">
-                    <span class="title">Purata Kepadatan Reban</span>
-                    <span class="value" id="statPartDensity">0.0</span>
-                    <span class="subtitle">ekor / m²</span>
-                </div>
-
-                <div class="stat-card" style="background: var(--secondary-light); border-color: #bae6fd;">
-                    <span class="title">Jumlah Ayam Ideal Reban</span>
-                    <span class="value" id="statPartCapacity">0 - 0</span>
-                    <span class="subtitle">ekor (Standard 10-12 ekor/m²)</span>
-                </div>
-            </div>
-
-            <div style="margin-top: 12px; font-size: 0.85rem; color: #334155; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-                <div>
-                    Status Keseluruhan Reban: <strong id="lblPartStatus">-</strong>
-                </div>
-                <span id="badgePartStatus" class="badge-status badge-good">Sedia Kira</span>
-            </div>
-        </div>
-
-        <div class="card no-print">
-            <div class="tab-container">
-                <button class="tab-btn active" onclick="switchTab('single')">Input Masukan Data</button>
-                <button class="tab-btn" onclick="switchTab('bulk')">Input Pukal (Salin/Tepek)</button>
-            </div>
-
-            <!-- Tab 1: Single Entry -->
-            <div id="tab-single" class="tab-content active">
-                <form id="singleForm" onsubmit="addSingleWeight(event)">
-                    <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
-                        <div class="form-group" style="flex: 2; min-width: 140px;">
-                            <label for="inputSingleWeight">Berat Ayam (kg / gram)</label>
-                            <input type="number" id="inputSingleWeight" step="any" min="0.001" placeholder="Cth: 1.85 (kg) atau 352 (g)" autofocus>
-                        </div>
-                        <div class="form-group" style="flex: 1; min-width: 100px;">
-                            <label for="inputSingleQty">Bilangan (Ekor)</label>
-                            <input type="number" id="inputSingleQty" min="1" max="1000" value="1" placeholder="1">
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="height: 42px; min-width: 100px;">
-                            + Tambah
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Tab 2: Bulk Entry -->
-            <div id="tab-bulk" class="tab-content">
-                <div class="form-group">
-                    <label for="inputBulkWeights">Masukkan senarai berat (Pisahkan dengan koma, ruang, atau baris baru)</label>
-                    <textarea id="inputBulkWeights" rows="3" placeholder="Cth: 1.82, 1.90, 1.75, 1.88, 1.95, 2.01, 1.80"></textarea>
-                </div>
-                <button type="button" class="btn btn-secondary btn-full" onclick="processBulkWeights()" style="margin-top: 10px;">
-                    Proses Masukan Pukal
-                </button>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2 style="font-size: 1.1rem; margin-bottom: 12px; color: #334155;">Keputusan Keseragaman</h2>
-            
-            <div class="grid-4">
-                <div class="stat-card">
-                    <span class="title">Jumlah Sampel</span>
-                    <span class="value" id="statCount">0</span>
-                    <span class="subtitle">ekor ayam</span>
-                </div>
-
-                <div class="stat-card">
-                    <span class="title">Purata Berat</span>
-                    <span class="value" id="statAverage">0.00</span>
-                    <span class="subtitle">kilogram (kg)</span>
-                </div>
-
-                <div class="stat-card">
-                    <span class="title">Min & Maks</span>
-                    <span class="value" id="statMinMax">0.00 / 0.00</span>
-                    <span class="subtitle">kg (Terendah / Tertinggi)</span>
-                </div>
-
-                <div class="stat-card">
-                    <span class="title">Nilai CV (%)</span>
-                    <span class="value" id="statCV">0.0%</span>
-                    <span class="subtitle">Pekali Kebolehaliran</span>
-                </div>
-            </div>
-
-            <div style="margin-top: 16px; padding: 16px; background: var(--primary-light); border-radius: 10px; border: 1px solid #bbf7d0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;">
-                <div>
-                    <div style="font-size: 0.85rem; font-weight: 700; color: #166534; text-transform: uppercase;">Keseragaman (Uniformity)</div>
-                    <div style="font-size: 2.2rem; font-weight: 800; color: #15803d; line-height: 1.1;" id="statUniformity">0.0%</div>
-                    <div style="font-size: 0.8rem; color: #166534; margin-top: 4px;">
-                        Julat Standard (±10%): <strong id="statRange">0.00 kg - 0.00 kg</strong>
-                    </div>
-                </div>
-                <div style="text-align: right;">
-                    <span id="badgeStatus" class="badge-status badge-excellent">Belum ada data</span>
-                </div>
-            </div>
-
-            <div style="margin-top: 16px;">
-                <div style="font-size: 0.85rem; font-weight: 600; color: #475569;">Agihan Berat Sampel:</div>
-                <div class="dist-bar-container">
-                    <div id="barUnder" class="dist-segment seg-under" style="width: 0%;">0%</div>
-                    <div id="barUniform" class="dist-segment seg-uniform" style="width: 100%;">0%</div>
-                    <div id="barOver" class="dist-segment seg-over" style="width: 0%;">0%</div>
-                </div>
-                <div class="dist-legend">
-                    <div class="legend-item"><span class="dot seg-under"></span> Bawah (&lt; -10%): <strong id="countUnder">0</strong></div>
-                    <div class="legend-item"><span class="dot seg-uniform"></span> Seragam (±10%): <strong id="countUniform">0</strong></div>
-                    <div class="legend-item"><span class="dot seg-over"></span> Atas (&gt; +10%): <strong id="countOver">0</strong></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h2 style="font-size: 1.1rem; color: #334155;">Senarai Berat Sampel</h2>
-                <span style="font-size: 0.85rem; color: #64748b;" id="tableCountText">0 rekod</span>
-            </div>
-
-            <div class="table-wrapper" style="max-height: 280px; overflow-y: auto;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 60px;">#</th>
-                            <th>Berat (kg)</th>
-                            <th>Status Standard (±10%)</th>
-                            <th class="no-print" style="width: 70px; text-align: center;">Tindakan</th>
-                        </tr>
-                    </thead>
-                    <tbody id="weightTableBody">
-                        <tr>
-                            <td colspan="4" style="text-align: center; color: #94a3b8; padding: 20px;">
-                                Tiada rekod berat dimasukkan.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-<!-- ==================== UniCVden Pro 1.0 ==================== -->
-<div class="card" id="proFlockCard">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
-        <div>
-            <h2 style="font-size:1.15rem;color:#0f766e;margin-bottom:4px;">🐔 UniCVden Pro</h2>
-            <p style="font-size:.82rem;color:#64748b;">Rekod flock, simpan keputusan dan sejarah pemeriksaan.</p>
-        </div>
-        <span class="badge-status badge-excellent">PRO 1.0</span>
-    </div>
-
-    <div class="grid-2">
-        <div class="form-group">
-            <label for="proFlockName">Nama / Kod Flock</label>
-            <input type="text" id="proFlockName" placeholder="Cth: Flock A1">
-        </div>
-
-        <div class="form-group">
-            <label for="proDate">Tarikh Pemeriksaan</label>
-            <input type="date" id="proDate">
-        </div>
-
-        <div class="form-group">
-            <label for="proAgeWeek">Umur Ayam (Minggu)</label>
-            <input type="number" id="proAgeWeek" min="0" step="1" placeholder="Cth: 28">
-        </div>
-
-        <div class="form-group">
-            <label for="proTotalBirds">Jumlah Ayam Dalam Reban</label>
-            <input type="number" id="proTotalBirds" min="0" step="1" placeholder="Cth: 6800">
-        </div>
-    </div>
-
-    <div class="form-group" style="margin-top:12px;">
-        <label for="proNotes">Catatan</label>
-        <textarea id="proNotes" rows="2" placeholder="Cth: Pemeriksaan mingguan, selepas perubahan feed..."></textarea>
-    </div>
-
-    <div class="grid-4" style="margin-top:14px;">
-        <div class="stat-card">
-            <span class="title">Uniformity</span>
-            <span class="value" id="proUniformity">0.0%</span>
-        </div>
-
-        <div class="stat-card">
-            <span class="title">CV</span>
-            <span class="value" id="proCV">0.0%</span>
-        </div>
-
-        <div class="stat-card">
-            <span class="title">Purata Berat</span>
-            <span class="value" id="proAverage">0.00 kg</span>
-        </div>
-
-        <div class="stat-card">
-            <span class="title">Density</span>
-            <span class="value" id="proDensity">-</span>
-        </div>
-    </div>
-
-    <div class="btn-group" style="margin-top:14px;">
-        <button type="button" class="btn btn-primary" onclick="saveProFlockRecord()">
-            💾 Simpan Rekod Flock
-        </button>
-
-        <button type="button" class="btn btn-outline" onclick="clearProForm()">
-            Kosongkan
-        </button>
-    </div>
-
-    <div style="margin-top:20px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
-            <h3 style="font-size:1rem;color:#334155;">📋 Sejarah Pemeriksaan</h3>
-
-            <button type="button" class="btn btn-danger" style="padding:7px 12px;font-size:.8rem;" onclick="clearProHistory()">
-                Padam Semua Sejarah
-            </button>
-        </div>
-
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tarikh</th>
-                        <th>Flock</th>
-                        <th>Umur</th>
-                        <th>Uniformity</th>
-                        <th>CV</th>
-                        <th>Purata</th>
-                        <th>Density</th>
-                        <th class="no-print">Tindakan</th>
-                    </tr>
-                </thead>
-
-                <tbody id="proHistoryBody">
-                    <tr>
-                        <td colspan="8" style="text-align:center;color:#94a3b8;padding:20px;">
-                            Belum ada rekod Pro.
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div>
+Uniformity • CV • Purata Berat • Kepadatan Reban
 </div>
-<!-- ================== Tamat UniCVden Pro 1.0 ================== -->
-        <div class="btn-group no-print">
-            <button class="btn btn-primary" onclick="calculateAll()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                Kemaskini / Kira
-            </button>
-            <button class="btn btn-secondary" onclick="loadSampleData()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Muat Contoh Data
-            </button>
-            <button class="btn btn-outline" onclick="triggerPrint()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                Cetak / Simpan PDF
-            </button>
-            <button class="btn btn-danger" onclick="resetAllData()" style="margin-left: auto;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                Reset Semua
-            </button>
-        </div>
-
-    </div>
-
-    <!-- Notification Toast -->
-    <div id="toast" class="toast">Notifikasi</div>
-
-    <script>
-        let weights = [];
-
-        window.onload = function() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('lblTarikh').innerText = today;
-            
-            // Generate 6 partition input rows dynamically
-            buildPartitionRows();
-        };
-
-        function buildPartitionRows() {
-            const tbody = document.getElementById('partitionTableBody');
-            tbody.innerHTML = '';
-
-            for (let i = 1; i <= 6; i++) {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>Partition ${i}</strong></td>
-                    <td>
-                        <input type="number" id="partL_${i}" step="any" min="0" placeholder="0.0" oninput="calculatePartition()">
-                    </td>
-                    <td>
-                        <input type="number" id="partW_${i}" step="any" min="0" placeholder="0.0" oninput="calculatePartition()">
-                    </td>
-                    <td><span id="partArea_${i}" style="font-weight: 600;">0.00</span></td>
-                    <td><strong id="partChickens_${i}" style="color: #0284c7; font-size: 1rem;">0</strong></td>
-                    <td><span id="partDensity_${i}">0.0</span></td>
-                    <td><span id="partBadge_${i}" class="badge-status badge-good" style="font-size: 0.75rem;">-</span></td>
-                `;
-                tbody.appendChild(tr);
-            }
-        }
-
-        function calculatePartition() {
-            const totalCoopChickens = parseFloat(document.getElementById('inputTotalCoopChickens').value) || 0;
-            
-            let areas = [];
-            let totalArea = 0;
-
-            // 1. Calculate area for each of the 6 partitions
-            for (let i = 1; i <= 6; i++) {
-                const l = parseFloat(document.getElementById(`partL_${i}`).value) || 0;
-                const w = parseFloat(document.getElementById(`partW_${i}`).value) || 0;
-                const area = (l > 0 && w > 0) ? (l * w) : 0;
-                
-                areas.push(area);
-                totalArea += area;
-                
-                document.getElementById(`partArea_${i}`).innerText = area > 0 ? area.toFixed(2) : "0.00";
-            }
-
-            const areaEl = document.getElementById('statPartArea');
-            const densityEl = document.getElementById('statPartDensity');
-            const capacityEl = document.getElementById('statPartCapacity');
-            const statusLbl = document.getElementById('lblPartStatus');
-            const statusBadge = document.getElementById('badgePartStatus');
-
-            if (totalArea <= 0) {
-                for (let i = 1; i <= 6; i++) {
-                    document.getElementById(`partChickens_${i}`).innerText = "0";
-                    document.getElementById(`partDensity_${i}`).innerText = "0.0";
-                    const b = document.getElementById(`partBadge_${i}`);
-                    b.innerText = "-";
-                    b.className = "badge-status badge-good";
-                }
-                areaEl.innerText = "0.00";
-                densityEl.innerText = "0.0";
-                capacityEl.innerText = "0 - 0";
-                statusLbl.innerText = "Sila masukkan panjang dan lebar bagi sekurang-kurangnya 1 partition.";
-                statusBadge.innerText = "Sedia Kira";
-                statusBadge.className = "badge-status badge-good";
-                return;
-            }
-
-            // 2. Total Area & Capacity
-            areaEl.innerText = totalArea.toFixed(2);
-            const idealMinTotal = Math.floor(totalArea * 10);
-            const idealMaxTotal = Math.floor(totalArea * 12);
-            capacityEl.innerText = `${idealMinTotal} - ${idealMaxTotal}`;
-
-            // 3. Proportional chicken distribution logic
-            let allocatedChickens = new Array(6).fill(0);
-
-            if (totalCoopChickens > 0) {
-                let unrounded = areas.map(a => (a / totalArea) * totalCoopChickens);
-                let integerParts = unrounded.map(u => Math.floor(u));
-                let allocatedSum = integerParts.reduce((a, b) => a + b, 0);
-                let remainder = totalCoopChickens - allocatedSum;
-
-                // Sort fractions to distribute remaining odd chickens
-                let remaindersList = unrounded.map((u, idx) => ({ idx, frac: u - integerParts[idx] }));
-                remaindersList.sort((a, b) => b.frac - a.frac);
-
-                for (let i = 0; i < remainder; i++) {
-                    integerParts[remaindersList[i].idx] += 1;
-                }
-                allocatedChickens = integerParts;
-            }
-
-            // 4. Update each partition UI details
-            for (let i = 0; i < 6; i++) {
-                const pNum = i + 1;
-                const pArea = areas[i];
-                const pChickens = allocatedChickens[i];
-                const pChickensEl = document.getElementById(`partChickens_${pNum}`);
-                const pDensityEl = document.getElementById(`partDensity_${pNum}`);
-                const pBadge = document.getElementById(`partBadge_${pNum}`);
-
-                if (pArea > 0) {
-                    pChickensEl.innerText = pChickens;
-                    
-                    if (pChickens > 0) {
-                        const pDensity = pChickens / pArea;
-                        pDensityEl.innerText = pDensity.toFixed(1);
-
-                        if (pDensity <= 10) {
-                            pBadge.innerText = "Optimal";
-                            pBadge.className = "badge-status badge-excellent";
-                        } else if (pDensity <= 12) {
-                            pBadge.innerText = "Sederhana";
-                            pBadge.className = "badge-status badge-good";
-                        } else {
-                            pBadge.innerText = "Padat";
-                            pBadge.className = "badge-status badge-poor";
-                        }
-                    } else {
-                        const idealMinP = Math.floor(pArea * 10);
-                        const idealMaxP = Math.floor(pArea * 12);
-                        pDensityEl.innerText = "0.0";
-                        pBadge.innerText = `Sesuai ${idealMinP}-${idealMaxP}`;
-                        pBadge.className = "badge-status badge-good";
-                    }
-                } else {
-                    pChickensEl.innerText = "0";
-                    pDensityEl.innerText = "0.0";
-                    pBadge.innerText = "-";
-                    pBadge.className = "badge-status badge-good";
-                }
-            }
-
-            // 5. Total Coop Density Status
-            if (totalCoopChickens > 0) {
-                const overallDensity = totalCoopChickens / totalArea;
-                densityEl.innerText = overallDensity.toFixed(1);
-
-                if (overallDensity <= 10) {
-                    statusLbl.innerText = `Kepadatan Reban Optimal (${overallDensity.toFixed(1)} ekor/m² ≤ 10)`;
-                    statusBadge.innerText = "Optimal";
-                    statusBadge.className = "badge-status badge-excellent";
-                } else if (overallDensity <= 12) {
-                    statusLbl.innerText = `Kepadatan Reban Sederhana (${overallDensity.toFixed(1)} ekor/m² - Standard 10-12)`;
-                    statusBadge.innerText = "Sederhana";
-                    statusBadge.className = "badge-status badge-good";
-                } else {
-                    const extra = totalCoopChickens - idealMaxTotal;
-                    statusLbl.innerText = `Reban Terlalu Padat! (${overallDensity.toFixed(1)} ekor/m² > 12). Berlebihan ~${extra} ekor.`;
-                    statusBadge.innerText = "Padat";
-                    statusBadge.className = "badge-status badge-poor";
-                }
-            } else {
-                densityEl.innerText = "0.0";
-                statusLbl.innerText = `Jumlah keluasan reban (${totalArea.toFixed(2)} m²) sesuai untuk ${idealMinTotal} - ${idealMaxTotal} ekor ayam.`;
-                statusBadge.innerText = "Keluasan Dikira";
-                statusBadge.className = "badge-status badge-good";
-            }
-        }
-
-        function switchTab(tabName) {
-            const buttons = document.querySelectorAll('.tab-btn');
-            const contents = document.querySelectorAll('.tab-content');
-
-            buttons.forEach(btn => btn.classList.remove('active'));
-            contents.forEach(content => content.classList.remove('active'));
-
-            if (tabName === 'single') {
-                buttons[0].classList.add('active');
-                document.getElementById('tab-single').classList.add('active');
-                document.getElementById('inputSingleWeight').focus();
-            } else {
-                buttons[1].classList.add('active');
-                document.getElementById('tab-bulk').classList.add('active');
-                document.getElementById('inputBulkWeights').focus();
-            }
-        }
-
-        function addSingleWeight(event) {
-            event.preventDefault();
-            const input = document.getElementById('inputSingleWeight');
-            const qtyInput = document.getElementById('inputSingleQty');
-
-            let val = parseFloat(input.value);
-            const qty = parseInt(qtyInput.value) || 1;
-
-            if (isNaN(val) || val <= 0) {
-                showToast("Sila masukkan nilai berat yang sah.");
-                return;
-            }
-
-            if (qty < 1) {
-                showToast("Sila masukkan bilangan ayam yang sah (minimum 1 ekor).");
-                return;
-            }
-
-            let isConvertedFromGram = false;
-            if (val > 15) {
-                val = val / 1000;
-                isConvertedFromGram = true;
-            }
-
-            for (let i = 0; i < qty; i++) {
-                weights.push(val);
-            }
-
-            input.value = '';
-            qtyInput.value = '1';
-            input.focus();
-
-            if (isConvertedFromGram) {
-                showToast(`${qty} ekor ayam (${(val * 1000).toFixed(0)}g → ${val.toFixed(3)} kg) berjaya ditambah.`);
-            } else {
-                showToast(`${qty} ekor ayam berberat ${val.toFixed(2)} kg berjaya ditambah.`);
-            }
-            calculateAll();
-        }
-
-        function processBulkWeights() {
-            const textarea = document.getElementById('inputBulkWeights');
-            const rawText = textarea.value;
-
-            if (!rawText.trim()) {
-                showToast("Sila masukkan data berat terlebih dahulu.");
-                return;
-            }
-
-            const parsedArray = rawText
-                .split(/[\s,\n]+/)
-                .map(v => {
-                    let num = parseFloat(v);
-                    if (!isNaN(num) && num > 15) {
-                        num = num / 1000;
-                    }
-                    return num;
-                })
-                .filter(v => !isNaN(v) && v > 0);
-
-            if (parsedArray.length === 0) {
-                showToast("Tiada nombor berat sah ditemui dalam masukan pukal.");
-                return;
-            }
-
-            weights = weights.concat(parsedArray);
-            textarea.value = '';
-            switchTab('single');
-            showToast(`${parsedArray.length} rekod berat berjaya dimasukkan!`);
-            calculateAll();
-        }
-
-        function deleteWeight(index) {
-            const removed = weights.splice(index, 1);
-            showToast(`Rekod #${index + 1} (${removed[0].toFixed(2)} kg) telah dipadam.`);
-            calculateAll();
-        }
-
-        function calculateAll() {
-            const count = weights.length;
-            const tableBody = document.getElementById('weightTableBody');
-            const tableCountText = document.getElementById('tableCountText');
-
-            tableCountText.innerText = `${count} rekod`;
-
-            if (count === 0) {
-                document.getElementById('statCount').innerText = '0';
-                document.getElementById('statAverage').innerText = '0.00';
-                document.getElementById('statMinMax').innerText = '0.00 / 0.00';
-                document.getElementById('statCV').innerText = '0.0%';
-                document.getElementById('statUniformity').innerText = '0.0%';
-                document.getElementById('statRange').innerText = '0.00 kg - 0.00 kg';
-                
-                const badge = document.getElementById('badgeStatus');
-                badge.innerText = 'Tiada Data';
-                badge.className = 'badge-status badge-excellent';
-
-                document.getElementById('barUnder').style.width = '0%';
-                document.getElementById('barUniform').style.width = '100%';
-                document.getElementById('barOver').style.width = '0%';
-                document.getElementById('barUnder').innerText = '0%';
-                document.getElementById('barUniform').innerText = '0%';
-                document.getElementById('barOver').innerText = '0%';
-
-                document.getElementById('countUnder').innerText = '0';
-                document.getElementById('countUniform').innerText = '0';
-                document.getElementById('countOver').innerText = '0';
-
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="4" style="text-align: center; color: #94a3b8; padding: 20px;">
-                            Tiada rekod berat dimasukkan.
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            const min = Math.min(...weights);
-            const max = Math.max(...weights);
-            const sum = weights.reduce((a, b) => a + b, 0);
-            const avg = sum / count;
-
-            let varianceSum = 0;
-            for (let i = 0; i < count; i++) {
-                varianceSum += Math.pow(weights[i] - avg, 2);
-            }
-            const stdDev = count > 1 ? Math.sqrt(varianceSum / (count - 1)) : 0;
-            const cvPercent = avg > 0 ? (stdDev / avg) * 100 : 0;
-
-            const rangeMin = avg * 0.90;
-            const rangeMax = avg * 1.10;
-
-            let underCount = 0;
-            let uniformCount = 0;
-            let overCount = 0;
-
-            weights.forEach(w => {
-                if (w < rangeMin) {
-                    underCount++;
-                } else if (w > rangeMax) {
-                    overCount++;
-                } else {
-                    uniformCount++;
-                }
-            });
-
-            const uniformityPercent = (uniformCount / count) * 100;
-            const underPercent = (underCount / count) * 100;
-            const overPercent = (overCount / count) * 100;
-
-            document.getElementById('statCount').innerText = count;
-            document.getElementById('statAverage').innerText = avg.toFixed(2);
-            document.getElementById('statMinMax').innerText = `${min.toFixed(2)} / ${max.toFixed(2)}`;
-            document.getElementById('statCV').innerText = `${cvPercent.toFixed(1)}%`;
-            document.getElementById('statUniformity').innerText = `${uniformityPercent.toFixed(1)}%`;
-            document.getElementById('statRange').innerText = `${rangeMin.toFixed(2)} kg - ${rangeMax.toFixed(2)} kg`;
-
-            const badge = document.getElementById('badgeStatus');
-            if (uniformityPercent >= 85) {
-                badge.innerText = 'Cemerlang (≥85%)';
-                badge.className = 'badge-status badge-excellent';
-            } else if (uniformityPercent >= 80) {
-                badge.innerText = 'Baik (80-84%)';
-                badge.className = 'badge-status badge-good';
-            } else if (uniformityPercent >= 70) {
-                badge.innerText = 'Sederhana (70-79%)';
-                badge.className = 'badge-status badge-moderate';
-            } else {
-                badge.innerText = 'Kurang Memuaskan (<70%)';
-                badge.className = 'badge-status badge-poor';
-            }
-
-            document.getElementById('barUnder').style.width = `${underPercent}%`;
-            document.getElementById('barUnder').innerText = underPercent > 5 ? `${underPercent.toFixed(0)}%` : '';
-            
-            document.getElementById('barUniform').style.width = `${uniformityPercent}%`;
-            document.getElementById('barUniform').innerText = uniformityPercent > 5 ? `${uniformityPercent.toFixed(0)}%` : '';
-            
-            document.getElementById('barOver').style.width = `${overPercent}%`;
-            document.getElementById('barOver').innerText = overPercent > 5 ? `${overPercent.toFixed(0)}%` : '';
-
-            document.getElementById('countUnder').innerText = `${underCount} ekor (${underPercent.toFixed(1)}%)`;
-            document.getElementById('countUniform').innerText = `${uniformCount} ekor (${uniformityPercent.toFixed(1)}%)`;
-            document.getElementById('countOver').innerText = `${overCount} ekor (${overPercent.toFixed(1)}%)`;
-
-            tableBody.innerHTML = '';
-            weights.forEach((w, index) => {
-                let statusTag = '';
-                if (w < rangeMin) {
-                    statusTag = '<span style="color: #d97706; font-weight: 600;">▼ Bawah Julat (&lt; -10%)</span>';
-                } else if (w > rangeMax) {
-                    statusTag = '<span style="color: #2563eb; font-weight: 600;">▲ Atas Julat (&gt; +10%)</span>';
-                } else {
-                    statusTag = '<span style="color: #16a34a; font-weight: 600;">✓ Seragam (±10%)</span>';
-                }
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td><strong>${w.toFixed(2)}</strong> kg</td>
-                    <td>${statusTag}</td>
-                    <td class="no-print" style="text-align: center;">
-                        <button class="delete-btn" onclick="deleteWeight(${index})" title="Padam rekod ini">✕</button>
-                    </td>
-                `;
-                tableBody.appendChild(tr);
-            });
-        }
-
-        function loadSampleData() {
-            weights = [1.82, 1.88, 1.90, 1.75, 1.85, 1.84, 1.92, 2.05, 1.78, 1.86, 1.83, 1.89, 1.70, 1.85, 1.91, 1.87, 1.80, 1.94, 1.81, 1.88];
-            
-            document.getElementById('inputReban').value = "Reban A - Reban Contoh";
-            document.getElementById('inputUmur').value = "28";
-            
-            document.getElementById('inputTotalCoopChickens').value = "3000";
-
-            // Sample dimensions for 6 partitions
-            const sampleDims = [
-                { l: 10, w: 5 },
-                { l: 10, w: 5 },
-                { l: 10, w: 5 },
-                { l: 10, w: 5 },
-                { l: 10, w: 5 },
-                { l: 10, w: 5 }
-            ];
-
-            sampleDims.forEach((d, idx) => {
-                document.getElementById(`partL_${idx + 1}`).value = d.l;
-                document.getElementById(`partW_${idx + 1}`).value = d.w;
-            });
-
-            calculatePartition();
-            updatePrintInfo();
-            showToast("Data contoh 6 partition & uniformity telah dimuatkan!");
-            calculateAll();
-        }
-
-        function updatePrintInfo() {
-            const reban = document.getElementById('inputReban').value.trim();
-            const umur = document.getElementById('inputUmur').value.trim();
-
-            document.getElementById('lblReban').innerText = reban || "-";
-            document.getElementById('lblUmur').innerText = umur || "-";
-        }
-
-        function triggerPrint() {
-            updatePrintInfo();
-            window.print();
-        }
-
-        function resetAllData() {
-            weights = [];
-            document.getElementById('inputReban').value = '';
-            document.getElementById('inputUmur').value = '';
-            document.getElementById('inputTotalCoopChickens').value = '';
-            
-            for (let i = 1; i <= 6; i++) {
-                document.getElementById(`partL_${i}`).value = '';
-                document.getElementById(`partW_${i}`).value = '';
-            }
-            
-            calculatePartition();
-            updatePrintInfo();
-            calculateAll();
-            showToast("Semua data telah dikosongkan.");
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.innerText = message;
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-   <script>
-/* ==================== UniCVden Pro 1.0 ==================== */
-
-function getProHistory() {
-    return JSON.parse(localStorage.getItem("unicvden_pro_history") || "[]");
+
+</div>
+
+
+<!-- ============================= -->
+<!-- KEPADATAN REBAN -->
+<!-- ============================= -->
+
+<div class="card">
+
+<h2>📐 Kalkulator Kepadatan Reban</h2>
+
+<div class="grid">
+
+<div>
+
+<label>Jumlah Ayam</label>
+
+<input
+id="totalBirds"
+type="number"
+min="0"
+placeholder="Contoh: 8000">
+
+</div>
+
+
+<div>
+
+<label>Bilangan Partition</label>
+
+<input
+id="partCount"
+type="number"
+min="1"
+max="6"
+value="6">
+
+</div>
+
+</div>
+
+
+<div class="tablewrap">
+
+<table class="ptable">
+
+<thead>
+
+<tr>
+
+<th>Partition</th>
+
+<th>Panjang m</th>
+
+<th>Lebar m</th>
+
+<th>Area m²</th>
+
+<th>Ayam</th>
+
+<th>Density</th>
+
+</tr>
+
+</thead>
+
+<tbody id="parts"></tbody>
+
+</table>
+
+</div>
+
+
+<div class="hero">
+
+<div class="lab">
+JUMLAH AYAM IDEAL REBAN
+</div>
+
+<div class="val" id="capacity">
+0 - 0
+</div>
+
+<div>
+ekor (Standard 10-12 ekor/m²)
+</div>
+
+</div>
+
+
+<div class="status">
+
+<span id="partStatus">
+Status Keseluruhan Reban: -
+</span>
+
+<span class="badge" id="partBadge">
+Sedia Kira
+</span>
+
+</div>
+
+</div>
+
+
+<!-- ============================= -->
+<!-- INPUT BERAT -->
+<!-- ============================= -->
+
+<div class="card">
+
+<h2>⚖️ Input Berat Ayam</h2>
+
+
+<div class="tabs">
+
+<button
+class="tab active"
+id="tm"
+onclick="tab('m')">
+
+Input Masukan Data
+
+</button>
+
+
+<button
+class="tab"
+id="tb"
+onclick="tab('b')">
+
+Input Pukal (Salin/Tepek)
+
+</button>
+
+</div>
+
+
+<!-- INPUT MANUAL -->
+
+<div id="manual">
+
+<div class="row">
+
+<div>
+
+<label>
+Berat Ayam (kg / gram)
+</label>
+
+<input
+id="weight"
+inputmode="decimal"
+placeholder="Cth: 1.85 (kg) atau 352 (g)">
+
+</div>
+
+
+<div class="qty">
+
+<label>
+Bilangan (Ekor)
+</label>
+
+<input
+id="qty"
+type="number"
+min="1"
+value="1">
+
+</div>
+
+</div>
+
+
+<div style="margin-top:10px">
+
+<button
+class="g"
+onclick="add()">
+
++ Tambah
+
+</button>
+
+
+<button
+class="x"
+onclick="undo()">
+
+Undur
+
+</button>
+
+
+<button
+class="r"
+onclick="resetW()">
+
+Reset Berat
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- INPUT PUKAL -->
+
+<div id="bulk" class="hidden">
+
+<label>
+Senarai berat
+</label>
+
+<textarea
+id="bulkText"
+rows="6"
+placeholder="1.85
+1.90
+1.82
+1.88"></textarea>
+
+
+<div style="margin-top:10px">
+
+<button
+class="g"
+onclick="bulk()">
+
+Masukkan Data Pukal
+
+</button>
+
+</div>
+
+</div>
+
+
+<div
+id="weights"
+class="weights">
+
+<div class="empty">
+Belum ada berat dimasukkan.
+</div>
+
+</div>
+
+
+<div
+style="
+font-size:13px;
+color:#64748b;
+margin-top:10px">
+
+Nilai 10 ke atas dianggap gram dan ditukar kepada kg.
+Contoh 352 = 0.352 kg.
+
+</div>
+
+</div>
+
+
+<!-- ============================= -->
+<!-- KEPUTUSAN -->
+<!-- ============================= -->
+
+<div class="card">
+
+<h2>
+📊 Keputusan Keseragaman
+</h2>
+
+
+<div class="results">
+
+
+<div class="box">
+
+<div class="lab">
+JUMLAH SAMPEL
+</div>
+
+<div
+class="val"
+id="n">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="lab">
+PURATA BERAT
+</div>
+
+<div
+class="val"
+id="avg">
+
+0.00 kg
+
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="lab">
+MIN & MAKS
+</div>
+
+<div
+class="val"
+id="mm">
+
+0.00 / 0.00
+
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="lab">
+NILAI CV
+</div>
+
+<div
+class="val"
+id="cv">
+
+0.0%
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="hero">
+
+<div class="lab">
+UNIFORMITY ±10%
+</div>
+
+<div
+class="val"
+id="uni">
+
+0.0%
+
+</div>
+
+<div
+class="range"
+id="range">
+
+Julat: -
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ============================= -->
+<!-- UNICVDEN PRO -->
+<!-- ============================= -->
+
+<div class="card">
+
+<div
+style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+flex-wrap:wrap">
+
+<div>
+
+<h2
+style="
+color:#0f766e;
+margin-bottom:4px">
+
+🐔 UniCVden Pro
+
+</h2>
+
+<div style="color:#64748b">
+
+Rekod flock, simpan keputusan dan sejarah pemeriksaan.
+
+</div>
+
+</div>
+
+
+<span class="badge">
+
+PRO 1.0
+
+</span>
+
+</div>
+
+
+<div
+class="grid"
+style="margin-top:14px">
+
+
+<div>
+
+<label>
+Nama / Kod Flock
+</label>
+
+<input
+id="flock"
+placeholder="Cth: Flock A1">
+
+</div>
+
+
+<div>
+
+<label>
+Tarikh Pemeriksaan
+</label>
+
+<input
+id="date"
+type="date">
+
+</div>
+
+
+<div>
+
+<label>
+Umur Ayam (Minggu)
+</label>
+
+<input
+id="age"
+type="number"
+min="0"
+placeholder="Cth: 28">
+
+</div>
+
+
+<div>
+
+<label>
+Jumlah Ayam Dalam Reban
+</label>
+
+<input
+id="proBirds"
+type="number"
+min="0"
+placeholder="Cth: 6800">
+
+</div>
+
+</div>
+
+
+<div style="margin-top:12px">
+
+<label>
+Catatan
+</label>
+
+<textarea
+id="notes"
+rows="2"
+placeholder="Cth: Pemeriksaan mingguan..."></textarea>
+
+</div>
+
+
+<div
+class="results"
+style="margin-top:12px">
+
+
+<div class="box">
+
+<div class="lab">
+UNIFORMITY
+</div>
+
+<div
+class="val"
+id="pUni">
+
+0.0%
+
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="lab">
+CV
+</div>
+
+<div
+class="val"
+id="pCV">
+
+0.0%
+
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="lab">
+PURATA BERAT
+</div>
+
+<div
+class="val"
+id="pAvg">
+
+0.00 kg
+
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="lab">
+DENSITY
+</div>
+
+<div
+class="val"
+id="pDen">
+
+-
+
+</div>
+
+</div>
+
+</div>
+
+
+<div style="margin-top:12px">
+
+<button
+class="g"
+onclick="saveRec()">
+
+💾 Simpan Rekod Flock
+
+</button>
+
+
+<button
+class="x"
+onclick="clearPro()">
+
+Kosongkan
+
+</button>
+
+</div>
+
+
+<h2
+style="margin-top:24px">
+
+📋 Sejarah Pemeriksaan
+
+</h2>
+
+
+<button
+class="r"
+onclick="clearHist()">
+
+Padam Semua Sejarah
+
+</button>
+
+
+<div
+class="tablewrap"
+style="margin-top:10px">
+
+
+<table class="history">
+
+<thead>
+
+<tr>
+
+<th>Tarikh</th>
+
+<th>Flock</th>
+
+<th>Umur</th>
+
+<th>Uniformity</th>
+
+<th>CV</th>
+
+<th>Purata</th>
+
+<th>Density</th>
+
+<th></th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="hist"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- ============================= -->
+<!-- BUTTON BAWAH -->
+<!-- ============================= -->
+
+<div class="card">
+
+<button
+class="b"
+onclick="calculateAll()">
+
+✓ Kemaskini / Kira
+
+</button>
+
+
+<button
+class="x"
+onclick="window.print()">
+
+🖨️ Cetak / PDF
+
+</button>
+
+
+<button
+class="r"
+onclick="resetAll()">
+
+Reset Semua
+
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+let weights=[];
+
+
+const $=id=>
+document.getElementById(id);
+
+
+function today(){
+
+return new Date()
+.toISOString()
+.slice(0,10);
+
 }
 
-function updateProSummary() {
-    const uniformity = document.getElementById("statUniformity")?.innerText || "0.0%";
-    const cv = document.getElementById("statCV")?.innerText || "0.0%";
-    const average = document.getElementById("statAverage")?.innerText || "0.00";
 
-    const totalBirds = parseFloat(
-        document.getElementById("inputTotalCoopChickens")?.value
-    ) || 0;
+/* ============================= */
+/* PARSE BERAT */
+/* ============================= */
 
-    const area = parseFloat(
-        document.getElementById("statPartArea")?.innerText
-    ) || 0;
+function pw(v){
 
-    const density = area > 0 && totalBirds > 0
-        ? (totalBirds / area).toFixed(1) + " ekor/m²"
-        : "-";
+let x=parseFloat(
+String(v)
+.trim()
+.replace(',','.')
+);
 
-    document.getElementById("proUniformity").innerText = uniformity;
-    document.getElementById("proCV").innerText = cv;
-    document.getElementById("proAverage").innerText = average + " kg";
-    document.getElementById("proDensity").innerText = density;
+if(!isFinite(x)||x<=0)
+return NaN;
+
+
+/*
+
+Jika nilai 10 ke atas
+dianggap gram.
+
+Contoh:
+
+352 = 0.352 kg
+
+1850 = 1.850 kg
+
+*/
+
+return x>=10 ? x/1000 : x;
+
 }
 
-function saveProFlockRecord() {
-    updateProSummary();
 
-    const flockName = document.getElementById("proFlockName").value.trim();
-    const date = document.getElementById("proDate").value;
-    const ageWeek = document.getElementById("proAgeWeek").value;
-    const totalBirds = document.getElementById("proTotalBirds").value;
-    const notes = document.getElementById("proNotes").value.trim();
+/* ============================= */
+/* TAMBAH BERAT */
+/* ============================= */
 
-    if (!flockName) {
-        showToast("Sila masukkan Nama / Kod Flock.");
-        return;
-    }
+function add(){
 
-    if (!date) {
-        showToast("Sila masukkan tarikh pemeriksaan.");
-        return;
-    }
+let w=pw(
+$('weight').value
+);
 
-    const record = {
-        id: Date.now(),
-        flockName: flockName,
-        date: date,
-        ageWeek: ageWeek || "-",
-        totalBirds: totalBirds || "-",
-        uniformity: document.getElementById("proUniformity").innerText,
-        cv: document.getElementById("proCV").innerText,
-        average: document.getElementById("proAverage").innerText,
-        density: document.getElementById("proDensity").innerText,
-        notes: notes
-    };
+let q=parseInt(
+$('qty').value
+)||1;
 
-    const history = getProHistory();
-    history.unshift(record);
 
-    localStorage.setItem(
-        "unicvden_pro_history",
-        JSON.stringify(history)
-    );
+if(!isFinite(w)){
 
-    renderProHistory();
+alert(
+'Sila masukkan berat yang sah.'
+);
 
-    showToast("✅ Rekod Flock berjaya disimpan!");
+return;
 
-    document.getElementById("proFlockName").value = "";
-    document.getElementById("proDate").value = "";
-    document.getElementById("proAgeWeek").value = "";
-    document.getElementById("proTotalBirds").value = "";
-    document.getElementById("proNotes").value = "";
 }
 
-function renderProHistory() {
-    const tbody = document.getElementById("proHistoryBody");
-    const history = getProHistory();
 
-    if (!history.length) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="8"
-                    style="text-align:center;color:#94a3b8;padding:20px;">
-                    Belum ada rekod Pro.
-                </td>
-            </tr>
-        `;
-        return;
-    }
+for(
+let i=0;
+i<q;
+i++
+){
 
-    tbody.innerHTML = "";
+weights.push(w);
 
-    history.forEach((record, index) => {
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-            <td>${record.date}</td>
-            <td><strong>${record.flockName}</strong></td>
-            <td>${record.ageWeek}</td>
-            <td>${record.uniformity}</td>
-            <td>${record.cv}</td>
-            <td>${record.average}</td>
-            <td>${record.density}</td>
-            <td class="no-print">
-                <button
-                    class="delete-btn"
-                    onclick="deleteProRecord(${index})"
-                    title="Padam rekod">
-                    ✕
-                </button>
-            </td>
-        `;
-
-        tbody.appendChild(tr);
-    });
 }
 
-function deleteProRecord(index) {
-    const history = getProHistory();
 
-    if (!confirm("Padam rekod ini?")) {
-        return;
-    }
+$('weight').value='';
 
-    history.splice(index, 1);
+$('qty').value=1;
 
-    localStorage.setItem(
-        "unicvden_pro_history",
-        JSON.stringify(history)
-    );
 
-    renderProHistory();
+render();
 
-    showToast("Rekod Pro telah dipadam.");
+calculateAll();
+
+$('weight').focus();
+
 }
 
-function clearProHistory() {
-    const history = getProHistory();
 
-    if (!history.length) {
-        showToast("Tiada sejarah untuk dipadam.");
-        return;
-    }
+/* ============================= */
+/* UNDO */
+/* ============================= */
 
-    if (!confirm("Padam SEMUA sejarah pemeriksaan Pro?")) {
-        return;
-    }
+function undo(){
 
-    localStorage.removeItem("unicvden_pro_history");
+weights.pop();
 
-    renderProHistory();
+render();
 
-    showToast("Semua sejarah Pro telah dipadam.");
+calculateAll();
+
 }
 
-function clearProForm() {
-    document.getElementById("proFlockName").value = "";
-    document.getElementById("proDate").value = "";
-    document.getElementById("proAgeWeek").value = "";
-    document.getElementById("proTotalBirds").value = "";
-    document.getElementById("proNotes").value = "";
 
-    updateProSummary();
+/* ============================= */
+/* RESET BERAT */
+/* ============================= */
 
-    showToast("Borang Pro dikosongkan.");
+function resetW(){
+
+weights=[];
+
+render();
+
+calculateAll();
+
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    const dateInput = document.getElementById("proDate");
 
-    if (dateInput) {
-        dateInput.value = new Date()
-            .toISOString()
-            .split("T")[0];
-    }
+/* ============================= */
+/* PAPAR BERAT */
+/* ============================= */
 
-    renderProHistory();
-    updateProSummary();
+function render(){
+
+let b=$('weights');
+
+
+if(!weights.length){
+
+b.innerHTML=
+'<div class="empty">'+
+'Belum ada berat dimasukkan.'+
+'</div>';
+
+return;
+
+}
+
+
+b.innerHTML=
+weights
+.slice(0,150)
+.map(
+(w,i)=>
+`<div class="weight">
+${i+1}. ${w.toFixed(3)} kg
+</div>`
+)
+.join('');
+
+}
+
+
+/* ============================= */
+/* INPUT PUKAL */
+/* ============================= */
+
+function bulk(){
+
+let a=
+$('bulkText')
+.value
+.split(/[\n,;]+/);
+
+let c=0;
+
+
+a.forEach(s=>{
+
+let m=
+s.trim()
+.match(
+/^(.+?)\s*(?:x|\*)\s*(\d+)$/i
+);
+
+
+if(m){
+
+let w=pw(m[1]);
+
+let q=parseInt(m[2]);
+
+
+if(isFinite(w)){
+
+for(
+let i=0;
+i<q;
+i++
+){
+
+weights.push(w);
+
+}
+
+c+=q;
+
+}
+
+}
+
+else{
+
+s.trim()
+.split(/\s+/)
+.forEach(v=>{
+
+let w=pw(v);
+
+if(isFinite(w)){
+
+weights.push(w);
+
+c++;
+
+}
+
 });
 
-/* Kemaskini ringkasan Pro selepas kiraan utama */
-const originalCalculateAll = window.calculateAll;
+}
 
-window.calculateAll = function() {
-    originalCalculateAll();
-    updateProSummary();
+});
+
+
+if(!c){
+
+alert(
+'Tiada berat sah ditemui.'
+);
+
+return;
+
+}
+
+
+$('bulkText').value='';
+
+render();
+
+calculateAll();
+
+}
+
+
+/* ============================= */
+/* TAB */
+/* ============================= */
+
+function tab(t){
+
+$('manual')
+.classList
+.toggle(
+'hidden',
+t!='m'
+);
+
+
+$('bulk')
+.classList
+.toggle(
+'hidden',
+t=='m'
+);
+
+
+$('tm')
+.classList
+.toggle(
+'active',
+t=='m'
+);
+
+
+$('tb')
+.classList
+.toggle(
+'active',
+t=='b'
+);
+
+}
+
+
+/* ============================= */
+/* KIRA UNIFORMITY */
+/* ============================= */
+
+function calc(){
+
+let n=weights.length;
+
+
+if(!n){
+
+return{
+
+n:0,
+avg:0,
+min:0,
+max:0,
+sd:0,
+cv:0,
+uni:0,
+low:0,
+high:0,
+within:0
+
 };
-/* ================= AUTO KIRA UniCVden Pro ================= */
 
-let uniCvdenAutoTimer = null;
-
-function autoCalculateUniCVden() {
-    clearTimeout(uniCvdenAutoTimer);
-
-    uniCvdenAutoTimer = setTimeout(function() {
-        if (typeof window.calculateAll === "function") {
-            window.calculateAll();
-        } else if (typeof updateProSummary === "function") {
-            updateProSummary();
-        }
-    }, 150);
 }
 
-/* Auto kira semasa user menaip */
-document.addEventListener("input", function(event) {
-    const el = event.target;
 
-    if (
-        el.matches("input, textarea, select")
-    ) {
-        autoCalculateUniCVden();
-    }
-});
+let avg=
+weights.reduce(
+(a,b)=>a+b,
+0
+)/n;
 
-/* Auto kira apabila nilai berubah */
-document.addEventListener("change", function(event) {
-    const el = event.target;
 
-    if (
-        el.matches("input, textarea, select")
-    ) {
-        autoCalculateUniCVden();
-    }
-});
+let min=
+Math.min(...weights);
 
-/* Kira sekali apabila halaman dibuka */
-window.addEventListener("load", function() {
-    setTimeout(function() {
-        autoCalculateUniCVden();
-    }, 300);
-});
 
-/* ================= TAMAT AUTO KIRA ================= */
-/* ================= Tamat UniCVden Pro 1.0 ================= */
-</script><script>
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
-        navigator.serviceWorker.register("./service-worker.js")
-            .then(function() {
-                console.log("Service Worker aktif");
-            })
-            .catch(function(error) {
-                console.error("Service Worker gagal:", error);
-            });
-    });
+let max=
+Math.max(...weights);
+
+
+let low=
+avg*.9;
+
+
+let high=
+avg*1.1;
+
+
+let within=
+weights.filter(
+x=>
+x>=low &&
+x<=high
+).length;
+
+
+let v=0;
+
+
+if(n>1){
+
+v=
+weights.reduce(
+(s,x)=>
+s+(x-avg)**2,
+0
+)/(n-1);
+
 }
-    </script>
+
+
+let sd=Math.sqrt(v);
+
+
+let cv=
+avg?
+sd/avg*100:
+0;
+
+
+return{
+
+n,
+avg,
+min,
+max,
+sd,
+cv,
+uni:
+within/n*100,
+low,
+high,
+within
+
+};
+
+}
+
+
+/* ============================= */
+/* BUILD PARTITION */
+/* ============================= */
+
+function build(){
+
+let s='';
+
+
+for(
+let i=1;
+i<=6;
+i++
+){
+
+s+=`
+
+<tr>
+
+<td>
+<b>Partition ${i}</b>
+</td>
+
+<td>
+
+<input
+id="l${i}"
+type="number"
+min="0"
+step="any">
+
+</td>
+
+<td>
+
+<input
+id="w${i}"
+type="number"
+min="0"
+step="any">
+
+</td>
+
+<td id="a${i}">
+0.00
+</td>
+
+<td id="c${i}">
+0
+</td>
+
+<td id="d${i}">
+0.0
+</td>
+
+</tr>
+
+`;
+
+}
+
+
+$('parts').innerHTML=s;
+
+}
+
+
+/* ============================= */
+/* DENSITY */
+/* ============================= */
+
+function density(){
+
+let total=
+parseFloat(
+$('totalBirds').value
+)||0;
+
+
+let areas=[];
+
+let sum=0;
+
+
+for(
+let i=1;
+i<=6;
+i++
+){
+
+let a=
+(
+parseFloat(
+$('l'+i).value
+)||0
+)
+*
+(
+parseFloat(
+$('w'+i).value
+)||0
+);
+
+
+areas.push(a);
+
+sum+=a;
+
+
+$('a'+i)
+.textContent=
+a.toFixed(2);
+
+}
+
+
+/* ALLOCATE AYAM */
+
+let alloc=
+new Array(6)
+.fill(0);
+
+
+if(total&&sum){
+
+let raw=
+areas.map(
+a=>
+a/sum*total
+);
+
+
+let fl=
+raw.map(
+Math.floor
+);
+
+
+let rem=
+Math.round(
+total-
+fl.reduce(
+(a,b)=>a+b,
+0
+)
+);
+
+
+raw
+.map(
+(x,i)=>
+[
+x-fl[i],
+i
+]
+)
+.sort(
+(a,b)=>b[0]-a[0]
+)
+.slice(
+0,
+rem
+)
+.forEach(
+x=>
+fl[x[1]]++
+);
+
+
+alloc=fl;
+
+}
+
+
+/* PAPAR PARTITION */
+
+for(
+let i=1;
+i<=6;
+i++
+){
+
+$('c'+i)
+.textContent=
+alloc[i-1];
+
+
+$('d'+i)
+.textContent=
+areas[i-1]?
+(
+alloc[i-1]/
+areas[i-1]
+).toFixed(1):
+'0.0';
+
+}
+
+
+/* IDEAL */
+
+$('capacity')
+.textContent=
+`${Math.floor(sum*10)} - ${Math.floor(sum*12)}`;
+
+
+$('partStatus')
+.textContent=
+`Status Keseluruhan Reban: ${sum?'Dikira':'-'}`;
+
+
+$('partBadge')
+.textContent=
+sum?
+'Dikira':
+'Sedia Kira';
+
+
+return{
+
+total,
+sum
+
+};
+
+}
+
+
+/* ============================= */
+/* KIRA SEMUA */
+/* ============================= */
+
+function calculateAll(){
+
+let r=calc();
+
+let d=density();
+
+
+$('n')
+.textContent=
+r.n;
+
+
+$('avg')
+.textContent=
+r.avg.toFixed(2)
++' kg';
+
+
+$('mm')
+.textContent=
+r.min.toFixed(2)
++' / '+
+r.max.toFixed(2);
+
+
+$('cv')
+.textContent=
+r.cv.toFixed(1)
++'%';
+
+
+$('uni')
+.textContent=
+r.uni.toFixed(1)
++'%';
+
+
+$('range')
+.textContent=
+r.n
+?
+`Julat ±10%: ${r.low.toFixed(2)} – ${r.high.toFixed(2)} kg | ${r.within}/${r.n} ekor dalam julat`
+:
+'Julat: -';
+
+
+/* PRO */
+
+$('pUni')
+.textContent=
+r.uni.toFixed(1)
++'%';
+
+
+$('pCV')
+.textContent=
+r.cv.toFixed(1)
++'%';
+
+
+$('pAvg')
+.textContent=
+r.avg.toFixed(2)
++' kg';
+
+
+let birds=
+parseFloat(
+$('proBirds').value
+)||d.total;
+
+
+$('pDen')
+.textContent=
+birds&&d.sum
+?
+(
+birds/d.sum
+).toFixed(1)
++' ekor/m²'
+:
+'-';
+
+}
+
+
+/* ============================= */
+/* LOCAL STORAGE */
+/* ============================= */
+
+function hist(){
+
+let h=[];
+
+
+try{
+
+h=
+JSON.parse(
+localStorage
+.getItem(
+'unicvden_history'
+)
+||'[]'
+);
+
+}
+
+catch(e){
+
+h=[];
+
+}
+
+
+return h;
+
+}
+
+
+/* ============================= */
+/* PAPAR SEJARAH */
+/* ============================= */
+
+function renderHist(){
+
+let h=hist();
+
+
+$('hist')
+.innerHTML=
+h.length
+?
+h.map(
+x=>
+
+`<tr>
+
+<td>${x.date}</td>
+
+<td>
+${esc(x.flock)}
+</td>
+
+<td>
+${esc(x.age)}
+</td>
+
+<td>
+${x.uni.toFixed(1)}%
+</td>
+
+<td>
+${x.cv.toFixed(1)}%
+</td>
+
+<td>
+${x.avg.toFixed(2)} kg
+</td>
+
+<td>
+${
+x.den==null
+?
+'-'
+:
+x.den.toFixed(1)
++' ekor/m²'
+}
+</td>
+
+<td>
+
+<button
+class="r"
+onclick="delRec(${x.id})">
+
+✕
+
+</button>
+
+</td>
+
+</tr>`
+
+).join('')
+
+:
+
+`<tr>
+
+<td
+colspan="8"
+class="empty">
+
+Belum ada rekod.
+
+</td>
+
+</tr>`;
+
+}
+
+
+/* ============================= */
+/* SIMPAN REKOD */
+/* ============================= */
+
+function saveRec(){
+
+let r=calc();
+
+let d=density();
+
+
+let birds=
+parseFloat(
+$('proBirds').value
+)||d.total;
+
+
+let h=hist();
+
+
+h.unshift({
+
+id:Date.now(),
+
+date:
+$('date').value
+||
+today(),
+
+flock:
+$('flock').value
+||
+'-',
+
+age:
+$('age').value
+||
+'-',
+
+uni:
+r.uni,
+
+cv:
+r.cv,
+
+avg:
+r.avg,
+
+den:
+birds&&d.sum
+?
+birds/d.sum
+:
+null
+
+});
+
+
+localStorage
+.setItem(
+'unicvden_history',
+JSON.stringify(
+h.slice(0,100)
+)
+);
+
+
+renderHist();
+
+
+alert(
+'Rekod flock berjaya disimpan.'
+);
+
+}
+
+
+/* ============================= */
+/* PADAM REKOD */
+/* ============================= */
+
+function delRec(id){
+
+localStorage.setItem(
+
+'unicvden_history',
+
+JSON.stringify(
+
+hist()
+.filter(
+x=>x.id!==id
+)
+
+)
+
+);
+
+renderHist();
+
+}
+
+
+/* ============================= */
+/* PADAM SEMUA SEJARAH */
+/* ============================= */
+
+function clearHist(){
+
+if(
+confirm(
+'Padam semua sejarah pemeriksaan?'
+)
+){
+
+localStorage.removeItem(
+'unicvden_history'
+);
+
+renderHist();
+
+}
+
+}
+
+
+/* ============================= */
+/* CLEAR PRO */
+/* ============================= */
+
+function clearPro(){
+
+$('flock').value='';
+
+$('age').value='';
+
+$('proBirds').value='';
+
+$('notes').value='';
+
+$('date').value=
+today();
+
+calculateAll();
+
+}
+
+
+/* ============================= */
+/* ESCAPE HTML */
+/* ============================= */
+
+function esc(s){
+
+return String(s)
+.replace(
+/[&<>"']/g,
+m=>
+({
+
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#039;'
+
+}[m])
+);
+
+}
+
+
+/* ============================= */
+/* RESET SEMUA */
+/* ============================= */
+
+function resetAll(){
+
+if(
+!confirm(
+'Reset semua input?'
+)
+)return;
+
+
+weights=[];
+
+
+document
+.querySelectorAll(
+'input,textarea'
+)
+.forEach(
+e=>e.value=''
+);
+
+
+$('qty').value=1;
+
+$('partCount').value=6;
+
+$('date').value=
+today();
+
+
+build();
+
+render();
+
+calculateAll();
+
+}
+
+
+/* ============================= */
+/* AUTO KIRA */
+/* ============================= */
+
+document.addEventListener(
+'input',
+e=>{
+
+if(
+e.target.matches(
+'input,textarea'
+)
+){
+
+calculateAll();
+
+}
+
+});
+
+
+document.addEventListener(
+'change',
+e=>{
+
+if(
+e.target.matches(
+'input,textarea'
+)
+){
+
+calculateAll();
+
+}
+
+});
+
+
+/* ENTER TAMBAH BERAT */
+
+$('weight')
+.addEventListener(
+'keydown',
+e=>{
+
+if(
+e.key==='Enter'
+){
+
+add();
+
+}
+
+});
+
+
+/* ============================= */
+/* LOAD */
+/* ============================= */
+
+window.addEventListener(
+'load',
+()=>{
+
+build();
+
+$('date').value=
+today();
+
+renderHist();
+
+render();
+
+calculateAll();
+
+});
+
+
+/* ============================= */
+/* SERVICE WORKER */
+/* ============================= */
+
+if(
+'serviceWorker'
+in navigator
+){
+
+window.addEventListener(
+'load',
+()=>{
+
+navigator
+.serviceWorker
+.register(
+'./service-worker.js'
+)
+.catch(
+()=>{}
+);
+
+});
+
+}
+
+</script>
+
 </body>
-</html>
+    </html>
