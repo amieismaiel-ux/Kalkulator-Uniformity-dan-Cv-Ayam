@@ -2492,31 +2492,33 @@ function calculateFeedSpace() {
 function calculateBilikAyam() {
 
     const standardCmPerBird = 8;
-
     let totalFeeder = 0;
 
-    for (let i = 1; i <= 6; i++) {
+    const rows = document.querySelectorAll(".feed-table tbody tr");
 
-        const feederEl = document.getElementById("feedLine" + i);
-        const sepatutnyaEl = document.getElementById("bilikIdeal" + i);
+    rows.forEach(function(row) {
 
-        const feeder = Number(feederEl?.value) || 0;
+        const feederInput = row.querySelector('input[id^="feedLine"]');
+        const feeder = Number(feederInput?.value) || 0;
 
         totalFeeder += feeder;
 
-        if (sepatutnyaEl) {
-            const ideal = feeder / standardCmPerBird;
+        const idealCell = row.children[3];
 
-            sepatutnyaEl.textContent =
-                ideal > 0 ? Math.round(ideal).toLocaleString("ms-MY") : "0";
+        if (idealCell) {
+            idealCell.textContent =
+                feeder > 0
+                    ? Math.round(feeder / standardCmPerBird)
+                    : 0;
         }
-    }
+
+    });
 
     const birdsEl = document.getElementById("feedBirds");
     const birds = Number(birdsEl?.value) || 0;
 
     const totalEl = document.getElementById("feedTotalLength");
-    const spaceEl = document.getElementById("feedSpacePerBird");
+    const spaceEl = document.getElementById("feedSpace");
 
     if (totalEl) {
         totalEl.textContent =
@@ -2529,8 +2531,7 @@ function calculateBilikAyam() {
                 ? (totalFeeder / birds).toFixed(2) + " cm/ekor"
                 : "0.00 cm/ekor";
     }
-}
-
+            }
 /* Kira apabila mana-mana input berubah */
 document.addEventListener("input", function(event) {
 
