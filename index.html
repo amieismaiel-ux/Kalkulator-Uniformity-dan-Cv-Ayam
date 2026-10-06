@@ -1496,7 +1496,52 @@ window.calculateAll = function() {
     originalCalculateAll();
     updateProSummary();
 };
+/* ================= AUTO KIRA UniCVden Pro ================= */
 
+let uniCvdenAutoTimer = null;
+
+function autoCalculateUniCVden() {
+    clearTimeout(uniCvdenAutoTimer);
+
+    uniCvdenAutoTimer = setTimeout(function() {
+        if (typeof window.calculateAll === "function") {
+            window.calculateAll();
+        } else if (typeof updateProSummary === "function") {
+            updateProSummary();
+        }
+    }, 150);
+}
+
+/* Auto kira semasa user menaip */
+document.addEventListener("input", function(event) {
+    const el = event.target;
+
+    if (
+        el.matches("input, textarea, select")
+    ) {
+        autoCalculateUniCVden();
+    }
+});
+
+/* Auto kira apabila nilai berubah */
+document.addEventListener("change", function(event) {
+    const el = event.target;
+
+    if (
+        el.matches("input, textarea, select")
+    ) {
+        autoCalculateUniCVden();
+    }
+});
+
+/* Kira sekali apabila halaman dibuka */
+window.addEventListener("load", function() {
+    setTimeout(function() {
+        autoCalculateUniCVden();
+    }, 300);
+});
+
+/* ================= TAMAT AUTO KIRA ================= */
 /* ================= Tamat UniCVden Pro 1.0 ================= */
 </script><script>
 if ("serviceWorker" in navigator) {
