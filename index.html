@@ -1302,7 +1302,203 @@
                 toast.classList.remove('show');
             }, 3000);
         }
-    </script><script>
+   <script>
+/* ==================== UniCVden Pro 1.0 ==================== */
+
+function getProHistory() {
+    return JSON.parse(localStorage.getItem("unicvden_pro_history") || "[]");
+}
+
+function updateProSummary() {
+    const uniformity = document.getElementById("statUniformity")?.innerText || "0.0%";
+    const cv = document.getElementById("statCV")?.innerText || "0.0%";
+    const average = document.getElementById("statAverage")?.innerText || "0.00";
+
+    const totalBirds = parseFloat(
+        document.getElementById("inputTotalCoopChickens")?.value
+    ) || 0;
+
+    const area = parseFloat(
+        document.getElementById("statPartArea")?.innerText
+    ) || 0;
+
+    const density = area > 0 && totalBirds > 0
+        ? (totalBirds / area).toFixed(1) + " ekor/m²"
+        : "-";
+
+    document.getElementById("proUniformity").innerText = uniformity;
+    document.getElementById("proCV").innerText = cv;
+    document.getElementById("proAverage").innerText = average + " kg";
+    document.getElementById("proDensity").innerText = density;
+}
+
+function saveProFlockRecord() {
+    updateProSummary();
+
+    const flockName = document.getElementById("proFlockName").value.trim();
+    const date = document.getElementById("proDate").value;
+    const ageWeek = document.getElementById("proAgeWeek").value;
+    const totalBirds = document.getElementById("proTotalBirds").value;
+    const notes = document.getElementById("proNotes").value.trim();
+
+    if (!flockName) {
+        showToast("Sila masukkan Nama / Kod Flock.");
+        return;
+    }
+
+    if (!date) {
+        showToast("Sila masukkan tarikh pemeriksaan.");
+        return;
+    }
+
+    const record = {
+        id: Date.now(),
+        flockName: flockName,
+        date: date,
+        ageWeek: ageWeek || "-",
+        totalBirds: totalBirds || "-",
+        uniformity: document.getElementById("proUniformity").innerText,
+        cv: document.getElementById("proCV").innerText,
+        average: document.getElementById("proAverage").innerText,
+        density: document.getElementById("proDensity").innerText,
+        notes: notes
+    };
+
+    const history = getProHistory();
+    history.unshift(record);
+
+    localStorage.setItem(
+        "unicvden_pro_history",
+        JSON.stringify(history)
+    );
+
+    renderProHistory();
+
+    showToast("✅ Rekod Flock berjaya disimpan!");
+
+    document.getElementById("proFlockName").value = "";
+    document.getElementById("proDate").value = "";
+    document.getElementById("proAgeWeek").value = "";
+    document.getElementById("proTotalBirds").value = "";
+    document.getElementById("proNotes").value = "";
+}
+
+function renderProHistory() {
+    const tbody = document.getElementById("proHistoryBody");
+    const history = getProHistory();
+
+    if (!history.length) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8"
+                    style="text-align:center;color:#94a3b8;padding:20px;">
+                    Belum ada rekod Pro.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = "";
+
+    history.forEach((record, index) => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+            <td>${record.date}</td>
+            <td><strong>${record.flockName}</strong></td>
+            <td>${record.ageWeek}</td>
+            <td>${record.uniformity}</td>
+            <td>${record.cv}</td>
+            <td>${record.average}</td>
+            <td>${record.density}</td>
+            <td class="no-print">
+                <button
+                    class="delete-btn"
+                    onclick="deleteProRecord(${index})"
+                    title="Padam rekod">
+                    ✕
+                </button>
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+}
+
+function deleteProRecord(index) {
+    const history = getProHistory();
+
+    if (!confirm("Padam rekod ini?")) {
+        return;
+    }
+
+    history.splice(index, 1);
+
+    localStorage.setItem(
+        "unicvden_pro_history",
+        JSON.stringify(history)
+    );
+
+    renderProHistory();
+
+    showToast("Rekod Pro telah dipadam.");
+}
+
+function clearProHistory() {
+    const history = getProHistory();
+
+    if (!history.length) {
+        showToast("Tiada sejarah untuk dipadam.");
+        return;
+    }
+
+    if (!confirm("Padam SEMUA sejarah pemeriksaan Pro?")) {
+        return;
+    }
+
+    localStorage.removeItem("unicvden_pro_history");
+
+    renderProHistory();
+
+    showToast("Semua sejarah Pro telah dipadam.");
+}
+
+function clearProForm() {
+    document.getElementById("proFlockName").value = "";
+    document.getElementById("proDate").value = "";
+    document.getElementById("proAgeWeek").value = "";
+    document.getElementById("proTotalBirds").value = "";
+    document.getElementById("proNotes").value = "";
+
+    updateProSummary();
+
+    showToast("Borang Pro dikosongkan.");
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const dateInput = document.getElementById("proDate");
+
+    if (dateInput) {
+        dateInput.value = new Date()
+            .toISOString()
+            .split("T")[0];
+    }
+
+    renderProHistory();
+    updateProSummary();
+});
+
+/* Kemaskini ringkasan Pro selepas kiraan utama */
+const originalCalculateAll = window.calculateAll;
+
+window.calculateAll = function() {
+    originalCalculateAll();
+    updateProSummary();
+};
+
+/* ================= Tamat UniCVden Pro 1.0 ================= */
+</script><script>
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", function() {
         navigator.serviceWorker.register("./service-worker.js")
