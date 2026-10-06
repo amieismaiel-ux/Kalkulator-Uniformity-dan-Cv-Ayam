@@ -710,7 +710,111 @@
                 </table>
             </div>
         </div>
+<!-- ==================== UniCVden Pro 1.0 ==================== -->
+<div class="card" id="proFlockCard">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+        <div>
+            <h2 style="font-size:1.15rem;color:#0f766e;margin-bottom:4px;">🐔 UniCVden Pro</h2>
+            <p style="font-size:.82rem;color:#64748b;">Rekod flock, simpan keputusan dan sejarah pemeriksaan.</p>
+        </div>
+        <span class="badge-status badge-excellent">PRO 1.0</span>
+    </div>
 
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="proFlockName">Nama / Kod Flock</label>
+            <input type="text" id="proFlockName" placeholder="Cth: Flock A1">
+        </div>
+
+        <div class="form-group">
+            <label for="proDate">Tarikh Pemeriksaan</label>
+            <input type="date" id="proDate">
+        </div>
+
+        <div class="form-group">
+            <label for="proAgeWeek">Umur Ayam (Minggu)</label>
+            <input type="number" id="proAgeWeek" min="0" step="1" placeholder="Cth: 28">
+        </div>
+
+        <div class="form-group">
+            <label for="proTotalBirds">Jumlah Ayam Dalam Reban</label>
+            <input type="number" id="proTotalBirds" min="0" step="1" placeholder="Cth: 6800">
+        </div>
+    </div>
+
+    <div class="form-group" style="margin-top:12px;">
+        <label for="proNotes">Catatan</label>
+        <textarea id="proNotes" rows="2" placeholder="Cth: Pemeriksaan mingguan, selepas perubahan feed..."></textarea>
+    </div>
+
+    <div class="grid-4" style="margin-top:14px;">
+        <div class="stat-card">
+            <span class="title">Uniformity</span>
+            <span class="value" id="proUniformity">0.0%</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="title">CV</span>
+            <span class="value" id="proCV">0.0%</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="title">Purata Berat</span>
+            <span class="value" id="proAverage">0.00 kg</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="title">Density</span>
+            <span class="value" id="proDensity">-</span>
+        </div>
+    </div>
+
+    <div class="btn-group" style="margin-top:14px;">
+        <button type="button" class="btn btn-primary" onclick="saveProFlockRecord()">
+            💾 Simpan Rekod Flock
+        </button>
+
+        <button type="button" class="btn btn-outline" onclick="clearProForm()">
+            Kosongkan
+        </button>
+    </div>
+
+    <div style="margin-top:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+            <h3 style="font-size:1rem;color:#334155;">📋 Sejarah Pemeriksaan</h3>
+
+            <button type="button" class="btn btn-danger" style="padding:7px 12px;font-size:.8rem;" onclick="clearProHistory()">
+                Padam Semua Sejarah
+            </button>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tarikh</th>
+                        <th>Flock</th>
+                        <th>Umur</th>
+                        <th>Uniformity</th>
+                        <th>CV</th>
+                        <th>Purata</th>
+                        <th>Density</th>
+                        <th class="no-print">Tindakan</th>
+                    </tr>
+                </thead>
+
+                <tbody id="proHistoryBody">
+                    <tr>
+                        <td colspan="8" style="text-align:center;color:#94a3b8;padding:20px;">
+                            Belum ada rekod Pro.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- ================== Tamat UniCVden Pro 1.0 ================== -->
         <div class="btn-group no-print">
             <button class="btn btn-primary" onclick="calculateAll()">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
