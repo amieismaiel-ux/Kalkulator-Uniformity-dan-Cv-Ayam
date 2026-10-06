@@ -1,4 +1,4 @@
-const CACHE_NAME = "uniformity-ayam-v1";
+const CACHE_NAME = "uniformity-ayam-v2";
 
 const APP_SHELL = [
   "./",
