@@ -2491,48 +2491,91 @@ function calculateFeedSpace() {
 
 function calculateBilikAyam() {
 
-    const standardCmPerBird = 8;
-    let totalFeeder = 0;
-
-    const rows = document.querySelectorAll(".feed-table tbody tr");
-
-    rows.forEach(function(row) {
-
-        const feederInput = row.querySelector('input[id^="feedLine"]');
-        const feeder = Number(feederInput?.value) || 0;
-
-        totalFeeder += feeder;
-
-        const idealCell = row.children[3];
-
-        if (idealCell) {
-            idealCell.textContent =
-                feeder > 0
-                    ? Math.round(feeder / standardCmPerBird)
-                    : 0;
-        }
-
-    });
-
     const birdsEl = document.getElementById("feedBirds");
     const birds = Number(birdsEl?.value) || 0;
 
-    const totalEl = document.getElementById("feedTotalLength");
-    const spaceEl = document.getElementById("feedSpace");
+    const rows = document.querySelectorAll(".feed-table tbody tr");
+
+    let totalFeeder = 0;
+
+    // Kira jumlah panjang feeder
+    rows.forEach(function(row) {
+
+        const feederInput =
+            row.querySelector('input[type="number"]');
+
+        const feeder =
+            Number(feederInput?.value) || 0;
+
+        totalFeeder += feeder;
+    });
+
+    let jumlahAyamSepatutnya = 0;
+
+    rows.forEach(function(row, index) {
+
+        const feederInput =
+            row.querySelector('input[type="number"]');
+
+        const feeder =
+            Number(feederInput?.value) || 0;
+
+        const idealCell =
+            row.children[3];
+
+        if (
+            index === rows.length - 1 &&
+            birds > 0
+        ) {
+
+            const baki =
+                birds - jumlahAyamSepatutnya;
+
+            if (idealCell) {
+                idealCell.textContent =
+                    Math.max(0, baki);
+            }
+
+        } else {
+
+            const ideal =
+                totalFeeder > 0 && birds > 0
+                    ? Math.round(
+                        (feeder / totalFeeder) * birds
+                    )
+                    : 0;
+
+            if (idealCell) {
+                idealCell.textContent = ideal;
+            }
+
+            jumlahAyamSepatutnya += ideal;
+        }
+    });
+
+    const totalEl =
+        document.getElementById("feedTotalLength");
 
     if (totalEl) {
         totalEl.textContent =
             totalFeeder.toFixed(2) + " cm";
     }
 
+    const spaceEl =
+        document.getElementById("feedSpace");
+
     if (spaceEl) {
+
         spaceEl.textContent =
             birds > 0
                 ? (totalFeeder / birds).toFixed(2) + " cm/ekor"
                 : "0.00 cm/ekor";
     }
-            }
-/* Kira apabila mana-mana input berubah */
+}
+
+
+/* Auto kira bila input berubah */
+
 document.addEventListener("input", function(event) {
 
     if (
@@ -2545,9 +2588,15 @@ document.addEventListener("input", function(event) {
 
 });
 
+
 /* Kira apabila halaman dibuka */
+
 window.addEventListener("load", function() {
-    setTimeout(calculateBilikAyam, 300);
+
+    setTimeout(function() {
+        calculateBilikAyam();
+    }, 300);
+
 });
 
 /* ================= TAMAT AUTO KIRA BILIK ================= */</script>
