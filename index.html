@@ -1,2657 +1,1036 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="ms">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#16a34a">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#166534">
+<title>UniCVden Pro | Pengurusan Ternakan</title>
 <link rel="manifest" href="manifest.json">
 
-<title>Kalkulator Uniformity & CV Ayam</title>
-
 <style>
+:root{
+  --green:#166534;
+  --green2:#16a34a;
+  --light:#f0fdf4;
+  --blue:#2563eb;
+  --red:#dc2626;
+  --ink:#334155;
+  --muted:#64748b;
+  --line:#e2e8f0;
+}
 *{box-sizing:border-box}
-
 body{
-margin:0;
-background:#f1f5f9;
-color:#334155;
-font-family:Arial,sans-serif
+  margin:0;background:#f1f5f9;color:var(--ink);
+  font-family:Arial,Helvetica,sans-serif;
 }
-
-.wrap{
-max-width:900px;
-margin:auto;
-padding:14px
+.wrap{max-width:1000px;margin:auto;padding:14px}
+.header{
+  background:linear-gradient(135deg,#14532d,#16a34a);
+  color:white;border-radius:22px;padding:25px;margin-bottom:18px;
 }
-
-.head{
-background:linear-gradient(135deg,#166534,#16a34a);
-color:white;
-padding:22px;
-border-radius:20px;
-margin-bottom:16px
-}
-
-.head h1{
-margin:0 0 6px;
-font-size:24px
-}
-
+.header h1{margin:0 0 8px;font-size:26px}
+.header p{margin:0;color:#dcfce7;line-height:1.6}
 .card{
-background:white;
-border-radius:18px;
-padding:18px;
-margin-bottom:16px;
-box-shadow:0 4px 16px #0f172a12
+  background:white;border-radius:19px;padding:19px;
+  margin-bottom:17px;box-shadow:0 5px 20px #0f172a0b;
+  min-width:0;
 }
-
-h2{
-margin:0 0 15px
+h2{font-size:21px;margin:0 0 15px}
+p{line-height:1.6}
+label{display:block;font-weight:700;margin-bottom:7px}
+input,select,textarea{
+  width:100%;min-width:0;padding:13px;
+  border:1px solid #cbd5e1;border-radius:12px;
+  font:inherit;font-size:16px;background:white;color:#1e293b;
 }
-
-label{
-display:block;
-font-weight:700;
-margin-bottom:7px
+input:focus,select:focus,textarea:focus{
+  outline:2px solid #86efac;border-color:#16a34a;
 }
-
-input,textarea{
-width:100%;
-padding:13px;
-border:1px solid #cbd5e1;
-border-radius:12px;
-font-size:16px
-}
-
 button{
-border:0;
-border-radius:12px;
-padding:13px 16px;
-font-weight:800;
-font-size:15px;
-cursor:pointer
+  border:0;border-radius:11px;padding:12px 15px;
+  font-size:14px;font-weight:800;cursor:pointer;
+  margin:3px 2px 3px 0;
 }
-
-.g{
-background:#16a34a;
-color:white
-}
-
-.b{
-background:#2563eb;
-color:white
-}
-
-.r{
-background:#ef4444;
-color:white
-}
-
-.x{
-background:#e2e8f0;
-color:#334155
-}
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px
-}
-
-.row{
-display:flex;
-gap:10px;
-align-items:end
-}
-
-.row>div:first-child{
-flex:1
-}
-
-.qty{
-width:150px
-}
-
-.tabs{
-display:flex;
-background:#f1f5f9;
-padding:5px;
-border-radius:14px;
-margin-bottom:14px
-}
-
-.tab{
-flex:1;
-background:transparent;
-color:#64748b
-}
-
-.active{
-background:white;
-color:#16a34a;
-box-shadow:0 2px 8px #0001
-}
-
-.hidden{
-display:none
-}
-
-.weights{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(100px,1fr));
-gap:7px;
-margin-top:12px
-}
-
-.weight{
-background:#f0fdf4;
-border:1px solid #bbf7d0;
-padding:8px;
-border-radius:9px;
-text-align:center
-}
-
-.empty{
-text-align:center;
-color:#94a3b8;
-padding:18px
-}
-
-.results{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px
-}
-
+button:active{transform:scale(.98)}
+.g{background:#16a34a;color:white}
+.b{background:#2563eb;color:white}
+.r{background:#dc2626;color:white}
+.x{background:#e2e8f0;color:#334155}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .box{
-background:#f8fafc;
-border:1px solid #e2e8f0;
-padding:14px;
-border-radius:13px
+  min-width:0;background:#f8fafc;border:1px solid var(--line);
+  padding:14px;border-radius:13px;
 }
-
-.lab{
-font-size:12px;
-color:#64748b;
-font-weight:800
-}
-
-.val{
-font-size:24px;
-font-weight:900;
-margin-top:4px
-}
-
+.lab{font-size:12px;color:var(--muted);font-weight:800}
+.val{font-size:24px;font-weight:900;margin-top:7px;overflow-wrap:anywhere}
 .hero{
-margin-top:12px;
-background:#ecfdf5;
-border:1px solid #86efac;
-padding:18px;
-border-radius:14px;
-text-align:center
+  margin-top:13px;background:#ecfdf5;border:1px solid #86efac;
+  padding:18px;border-radius:15px;text-align:center;
 }
-
-.hero .val{
-font-size:34px;
-color:#15803d
-}
-
+.hero .val{font-size:32px;color:#15803d}
 .range{
-margin-top:8px;
-background:#eff6ff;
-padding:10px;
-border-radius:10px;
-color:#1e40af;
-font-size:13px
+  margin-top:9px;background:#eff6ff;padding:11px;
+  border-radius:10px;color:#1e40af;font-size:13px;line-height:1.6;
 }
-
-
-.tablewrap{
-  overflow-x:auto;
-  overflow-y:hidden;
-  width:100%;
-  -webkit-overflow-scrolling:touch;
-}
-
-
-.ptable,
-.history{
-width:100%;
-border-collapse:collapse;
-min-width:850px
-}
-
-.ptable th,
-.ptable td,
-.history th,
-.history td{
-padding:9px;
-border-bottom:1px solid #e2e8f0;
-text-align:center
-}
-
-.ptable th,
-.history th{
-background:#f8fafc
-}
-
-.ptable input{
-min-width:80px;
-padding:8px
-}
-
+.muted{color:var(--muted);font-size:14px;line-height:1.6}
 .badge{
-display:inline-block;
-background:#dcfce7;
-color:#15803d;
-padding:8px 12px;
-border-radius:999px;
-font-weight:800
+  display:inline-block;background:#dcfce7;color:#15803d;
+  padding:8px 12px;border-radius:99px;font-weight:800;
 }
-
-.status{
-display:flex;
-justify-content:space-between;
-gap:10px;
-align-items:center;
-margin-top:12px
+.tablewrap{
+  width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;margin-top:12px;
 }
-
-@media(max-width:650px){
-
-.grid{
-grid-template-columns:1fr
+table{border-collapse:collapse}
+.ptable,.history,.feed-table{
+  width:100%;min-width:700px;
 }
-
-.row{
-align-items:stretch
+th,td{
+  padding:10px 8px;text-align:center;
+  border-bottom:1px solid var(--line);
 }
-
-.qty{
-width:auto
-}
-
-.results{
-grid-template-columns:1fr 1fr
-}
-
-
-
-
-/* FIX INPUT BERAT & BILANGAN */
-
-#manual .row:has(#weight) {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
-    gap: 14px !important;
-    width: 100% !important;
-}
-
-#manual .row:has(#weight) > div {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: none !important;
-}
-
-#manual #weight,
-#manual #qty {
-    display: block !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    box-sizing: border-box !important;
-    height: 58px !important;
-    padding: 12px 16px !important;
-    font-size: 20px !important;
-}
-
-@media (max-width: 650px) {
-    #manual .row:has(#weight) {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
-        gap: 10px !important;
-    }
-
-    #manual #weight,
-    #manual #qty {
-        height: 56px !important;
-        font-size: 18px !important;
-    }
-}/* ================= FEED SPACE 6 LINE ================= */
-
-.feed-card{
-  margin-top:20px;
-}
-
-.feed-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:15px;
-}
-
-.feed-table th,
-.feed-table td{
-  padding:10px 6px;
-  border-bottom:1px solid #e5e7eb;
-  text-align:center;
-}
-
-.feed-table th{
-  background:#f0fdf4;
-  color:#166534;
-  font-weight:800;
-}
-
-.feed-table input{
-  width:100%;
-  box-sizing:border-box;
-  padding:10px;
-  border:1px solid #cbd5e1;
-  border-radius:10px;
-  font-size:16px;
-  text-align:center;
-}
-
+th{background:#f8fafc;white-space:nowrap}
+.ptable input,.feed-table input{min-width:85px;padding:9px;text-align:center}
+.ptable td{white-space:nowrap}
+.feed-table{margin-top:12px}
+.feed-table th{background:#f0fdf4;color:#166534}
 .feed-total{
-  margin-top:18px;
-  padding:18px;
-  background:#ecfdf5;
-  border:1px solid #86efac;
-  border-radius:16px;
-  text-align:center;
+  background:#ecfdf5;border:1px solid #86efac;
+  padding:17px;border-radius:14px;margin-top:13px;
 }
-
-.feed-total .feed-big{
-  font-size:32px;
-  font-weight:900;
-  color:#15803d;
-  margin:6px 0;
+.feed-total .val{color:#15803d}
+.tabs{display:flex;gap:5px;background:#f1f5f9;padding:5px;border-radius:13px;margin-bottom:14px}
+.tab{flex:1;background:transparent;color:#64748b}
+.tab.active{background:white;color:#166534;box-shadow:0 2px 7px #0001}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,.55fr);gap:12px}
+.weights{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:7px;margin-top:13px}
+.weight{background:#f0fdf4;border:1px solid #bbf7d0;padding:9px;border-radius:9px;text-align:center;font-size:13px}
+.empty{color:#94a3b8;text-align:center;padding:20px}
+.hidden{display:none!important}
+.status{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.footer{text-align:center;color:#94a3b8;font-size:12px;padding:12px}
+@media(max-width:600px){
+  .wrap{padding:10px}
+  .header{padding:20px}
+  .header h1{font-size:22px}
+  .card{padding:15px;border-radius:16px}
+  h2{font-size:19px}
+  .grid{grid-template-columns:1fr}
+  .row{grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:9px}
+  .val{font-size:22px}
+  .hero .val{font-size:29px}
+  .results{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .box{padding:11px}
+  button{padding:12px 10px}
 }
-
-.feed-result{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:12px;
+@media print{
+  body{background:white}
+  .wrap{max-width:none;padding:0}
+  .header,.card{box-shadow:none;break-inside:avoid}
+  button,.tabs,.footer{display:none!important}
+  .tablewrap{overflow:visible}
+  table{min-width:0!important;font-size:9px}
+  th,td{padding:5px 3px}
+  input,select,textarea{border:0;padding:3px}
 }
-
-.feed-box{
-  background:#f8fafc;
-  border-radius:12px;
-  padding:12px;
-}
-
-.feed-box b{
-  display:block;
-  font-size:20px;
-  margin-top:4px;
-}
-
-@media(max-width:650px){
-  .feed-table th,
-  .feed-table td{
-    padding:8px 3px;
-    font-size:13px;
-  }
-
-  .feed-table input{
-    font-size:15px;
-    padding:9px 4px;
-  }
-    }</style>
+</style>
 </head>
 
 <body>
-
 <div class="wrap">
 
-<!-- HEADER -->
+<header class="header">
+  <h1>🐔 UniCVden Pro</h1>
+  <p>Kalkulator Uniformity, CV, Purata Berat, Kepadatan Reban dan Feed Space Ayam.</p>
+</header>
 
-<div class="head">
-
-<h1>🐔 Kalkulator Uniformity & CV Ayam</h1>
-
-<div>
-Uniformity • CV • Purata Berat • Kepadatan Reban
-</div>
-
-</div>
-
-
-<!-- ============================= -->
 <!-- KEPADATAN REBAN -->
-<!-- ============================= -->
+<section class="card">
+  <h2>📐 Kalkulator Kepadatan Reban</h2>
 
-<div class="card">
-
-<h2>📐 Kalkulator Kepadatan Reban</h2>
-
-<div class="grid">
-
-<div>
-
-<label>Jumlah Ayam</label>
-
-<input
-id="totalBirds"
-type="number"
-min="0"
-placeholder="Contoh: 8000">
-
-</div>
-
-
-<div>
-
-<label>Bilangan Partition</label>
-
-<input
-id="partCount"
-type="number"
-min="1"
-max="6"
-value="6">
-
-</div>
-
-</div>
-
-
-<div style="margin:14px 0;">
-  <label for="dimensionUnit">Unit Ukuran Panjang & Lebar</label>
-  <select id="dimensionUnit"
-          style="width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:12px;font-size:16px;">
-    <option value="m">Meter (m)</option>
-    <option value="ft">Kaki / Feet (ft)</option>
-  </select>
-  <div style="font-size:13px;color:#64748b;margin-top:6px;">
-    Pilih unit yang digunakan untuk mengukur panjang dan lebar partition.
-    Luas dan density akan dikira dalam m².
+  <div class="grid">
+    <div>
+      <label for="totalBirds">Jumlah Ayam</label>
+      <input id="totalBirds" type="number" min="0" step="1" placeholder="Contoh: 8000">
+    </div>
+    <div>
+      <label for="partCount">Bilangan Partition</label>
+      <select id="partCount">
+        <option value="1">1 Partition</option>
+        <option value="2">2 Partition</option>
+        <option value="3">3 Partition</option>
+        <option value="4">4 Partition</option>
+        <option value="5">5 Partition</option>
+        <option value="6" selected>6 Partition</option>
+      </select>
+    </div>
   </div>
-</div>
 
-<div class="tablewrap">
+  <div style="margin-top:14px">
+    <label for="dimensionUnit">Unit Ukuran Panjang & Lebar</label>
+    <select id="dimensionUnit">
+      <option value="m">Meter (m)</option>
+      <option value="ft">Kaki / Feet (ft)</option>
+    </select>
+    <p class="muted">Masukkan panjang dan lebar menggunakan unit pilihan. Luas serta density dipaparkan dalam m².</p>
+  </div>
 
-<table class="ptable">
+  <div class="tablewrap">
+    <table class="ptable">
+      <thead>
+        <tr>
+          <th>Partition</th>
+          <th id="lengthHeading">Panjang (m)</th>
+          <th id="widthHeading">Lebar (m)</th>
+          <th>Area (m²)</th>
+          <th>Ayam</th>
+          <th>Density</th>
+        </tr>
+      </thead>
+      <tbody id="parts"></tbody>
+    </table>
+  </div>
 
-<thead>
+  <div class="hero">
+    <div class="lab">JUMLAH AYAM IDEAL REBAN</div>
+    <div class="val" id="capacity">0 - 0</div>
+    <div>ekor (Standard 10–12 ekor/m²)</div>
+    <div class="range" id="areaTotal">Jumlah luas: 0.00 m²</div>
+  </div>
 
-<tr>
+  <div class="status">
+    <span id="partStatus">Status Keseluruhan Reban: -</span>
+    <span class="badge" id="partBadge">Sedia Kira</span>
+  </div>
+</section>
 
-<th>Partition</th>
+<!-- FEED SPACE -->
+<section class="card">
+  <h2>🐔 Feed Space Ayam</h2>
+  <p class="muted">Kiraan panjang feeder dan agihan ayam bagi enam bilik.</p>
 
-<th id="lengthHeading">Panjang (m)</th>
+  <label for="feedBirds">Jumlah Ayam Betina (ekor)</label>
+  <input id="feedBirds" type="number" min="0" step="1" placeholder="Contoh: 7254">
 
-<th id="widthHeading">Lebar (m)</th>
+  <div class="tablewrap">
+    <table class="feed-table">
+      <thead>
+        <tr>
+          <th>Bilik</th>
+          <th>Panjang Feeder (cm)</th>
+          <th>Ayam Actual</th>
+          <th>Ayam Sepatutnya</th>
+        </tr>
+      </thead>
+      <tbody id="feedRows"></tbody>
+    </table>
+  </div>
 
-<th>Area (m²)</th>
+  <div class="results" style="margin-top:14px">
+    <div class="box">
+      <div class="lab">JUMLAH PANJANG FEEDER</div>
+      <div class="val" id="feedTotalLength">0.00 cm</div>
+    </div>
+    <div class="box">
+      <div class="lab">FEED SPACE / EKOR</div>
+      <div class="val" id="feedSpaceResult">0.00 cm/ekor</div>
+    </div>
+  </div>
+  <p class="muted">Agihan ayam sepatutnya dikira mengikut nisbah panjang feeder setiap bilik.</p>
+</section>
 
-<th>Ayam</th>
-
-<th>Density</th>
-
-</tr>
-
-</thead>
-
-<tbody id="parts"></tbody>
-
-</table>
-
-</div>
-
-
-<div class="hero">
-
-<div class="lab">
-JUMLAH AYAM IDEAL REBAN
-</div>
-
-<div class="val" id="capacity">
-0 - 0
-</div>
-
-<div>
-ekor (Standard 10-12 ekor/m²)
-</div>
-
-</div>
-
-
-<div class="status">
-
-<span id="partStatus">
-Status Keseluruhan Reban: -
-</span>
-
-<span class="badge" id="partBadge">
-Sedia Kira
-</span>
-
-</div>
-
-</div>
-
-
-<!-- ============================= -->
 <!-- INPUT BERAT -->
-<!-- ============================= -->
-<!-- ================= FEED SPACE 6 LINE ================= -->
+<section class="card">
+  <h2>⚖️ Input Berat Ayam</h2>
+
+  <div class="tabs">
+    <button type="button" class="tab active" id="tm" data-tab="manual">Input Manual</button>
+    <button type="button" class="tab" id="tb" data-tab="bulk">Input Pukal</button>
+  </div>
+
+  <div id="manual">
+    <div class="row">
+      <div>
+        <label for="weight">Berat Ayam (kg / gram)</label>
+        <input id="weight" inputmode="decimal" placeholder="Contoh: 1.85 kg atau 352 g">
+      </div>
+      <div>
+        <label for="qty">Bilangan (ekor)</label>
+        <input id="qty" type="number" min="1" step="1" value="1">
+      </div>
+    </div>
+
+    <div style="margin-top:12px">
+      <button type="button" class="g" id="addWeight">＋ Tambah</button>
+      <button type="button" class="x" id="undoWeight">Undur</button>
+      <button type="button" class="r" id="resetWeight">Reset Berat</button>
+    </div>
+  </div>
+
+  <div id="bulk" class="hidden">
+    <label for="bulkText">Senarai berat</label>
+    <textarea id="bulkText" rows="6" placeholder="1.85&#10;1.90&#10;1.82&#10;1.88&#10;&#10;Boleh juga: 1.85x10"></textarea>
+    <button type="button" class="g" id="addBulk">Masukkan Data Pukal</button>
+  </div>
+
+  <div class="status">
+    <strong id="weightCount">0 sampel</strong>
+    <span class="muted">Contoh 352 gram = 0.352 kg</span>
+  </div>
+
+  <div id="weights" class="weights">
+    <div class="empty">Belum ada berat dimasukkan.</div>
+  </div>
+</section>
 
-<div class="card feed-card">
-
-<h2>🐔 Feed Space Ayam</h2>
-
-<p style="color:#64748b;">
-Kiraan panjang feeder dan ruang makan bagi setiap ekor ayam.
-</p>
-
-<div class="feed-box">
-
-<label>Jumlah Ayam Betina (ekor)</label>
-
-<input
-type="number"
-id="feedBirds"
-placeholder="Contoh: 7254"
-min="0"
-oninput="calculateFeedSpace()"
->
-
-</div>
-
-<table class="feed-table">
-  <thead>
-    <tr>
-      <th>Bilik</th>
-      <th>Panjang Feeder (cm)</th>
-      <th>Ayam Actual</th>
-      <th>Ayam Sepatutnya</th>
-    </tr>
-  </thead>
-
-  <tbody>
-
-    <tr>
-      <td>Bilik 1</td>
-      <td>
-        <input
-          type="number"
-          id="feedLine1"
-          placeholder="7315.2"
-          oninput="calculateFeedSpace()"
-        >
-      </td>
-      <td>
-        <input
-          type="number"
-          id="actualBirds1"
-          placeholder="Actual"
-          oninput="calculateFeedSpace()"
-        >
-      </td>
-      <td>
-        <strong id="idealBirds1">0</strong>
-      </td>
-    </tr>
-
-    <tr>
-      <td>Bilik 2</td>
-      <td>
-        <input
-          type="number"
-          id="feedLine2"
-          placeholder="10972.8"
-          oninput="calculateFeedSpace()"
-        >
-      </td>
-      <td>
-        <input
-          type="number"
-          id="actualBirds2"
-          placeholder="Actual"
-          oninput="calculateFeedSpace()"
-        >
-      </td>
-      <td>
-        <strong id="idealBirds2">0</strong>
-      </td>
-    </tr>
-
-    <tr>
-      <td>Bilik 3</td>
-      <td>
-        <input
-          type="number"
-          id="feedLine3"
-          placeholder="12435.84"
-          oninput="calculateFeedSpace()"
-        >
-      </td>
-      <td>
-        <input
-          type="number"
-          id="actualBirds3"
-          placeholder="Actual"
-          oninput="calculateFeedSpace()"
-        >
-      </td>
-      <td>
-        <strong id="idealBirds3">0</strong>
-      </td>
-    </tr>
-
-    <tr>
-      <td>Bilik 4</td>
-      <td>
-        <input
-          type="number"
-          id="feedLine4"
-          placeholder="7315.2"
-          oninput="calculateFeedSpace()"
-        >
-      </td>
-      <td>
-        <input
-          type="number"
-          id="actualBirds4"
-          placeholder="Actual"
-          oninput="calculateFeedSpace()"
-        >
-      </td>
-      <td>
-        <strong id="idealBirds4">0</strong>
-      </td>
-    </tr>
-
-    <tr>
-      <td>Bilik 5</td>
-      <td>
-        <input
-          type="number"
-          id="feedLine5"
-          placeholder="10972.8"
-          oninput="calculateFeedSpace()"
-        >
-      </td>
-      <td>
-        <input
-          type="number"
-          id="actualBirds5"
-          placeholder="Actual"
-          oninput="calculateFeedSpace()"
-        >
-      </td>
-      <td>
-        <strong id="idealBirds5">0</strong>
-      </td>
-    </tr>
-
-    <tr>
-      <td>Bilik 6</td>
-      <td>
-        <input
-          type="number"
-          id="feedLine6"
-          placeholder="10972.8"
-          oninput="calculateFeedSpace()"
-        >
-      </td>
-      <td>
-        <input
-          type="number"
-          id="actualBirds6"
-          placeholder="Actual"
-          oninput="calculateFeedSpace()"
-        >
-      </td>
-      <td>
-        <strong id="idealBirds6">0</strong>
-      </td>
-    </tr>
-
-  </tbody>
-</table>
-
-<div class="results">
-
-<div class="feed-box">
-<strong>Jumlah Panjang Feeder</strong>
-<b id="feedTotalLength">0.00 cm</b>
-</div>
-
-<div class="feed-box">
-<strong>Feed Space / Ekor</strong>
-<b id="feedSpaceResult">0.00 cm/ekor</b>
-</div>
-
-</div>
-
-</div>
-
-<!-- ================= TAMAT FEED SPACE ================= -->
-<div class="card">
-
-<h2>⚖️ Input Berat Ayam</h2>
-
-
-<div class="tabs">
-
-<button
-class="tab active"
-id="tm"
-onclick="tab('m')">
-
-Input Masukan Data
-
-</button>
-
-
-<button
-class="tab"
-id="tb"
-onclick="tab('b')">
-
-Input Pukal (Salin/Tepek)
-
-</button>
-
-</div>
-
-
-<!-- INPUT MANUAL -->
-
-<div id="manual">
-
-<div class="row">
-
-<div>
-
-<label>
-Berat Ayam (kg / gram)
-</label>
-
-<input
-id="weight"
-inputmode="decimal"
-placeholder="Cth: 1.85 (kg) atau 352 (g)">
-
-</div>
-
-
-<div class="qty">
-
-<label>
-Bilangan (Ekor)
-</label>
-
-<input
-id="qty"
-type="number"
-min="1"
-value="1">
-
-</div>
-
-</div>
-
-
-<div style="margin-top:10px">
-
-<button
-class="g"
-onclick="add()">
-
-+ Tambah
-
-</button>
-
-
-<button
-class="x"
-onclick="undo()">
-
-Undur
-
-</button>
-
-
-<button
-class="r"
-onclick="resetW()">
-
-Reset Berat
-
-</button>
-
-</div>
-
-</div>
-
-
-<!-- INPUT PUKAL -->
-
-<div id="bulk" class="hidden">
-
-<label>
-Senarai berat
-</label>
-
-<textarea
-id="bulkText"
-rows="6"
-placeholder="1.85
-1.90
-1.82
-1.88"></textarea>
-
-
-<div style="margin-top:10px">
-
-<button
-class="g"
-onclick="bulk()">
-
-Masukkan Data Pukal
-
-</button>
-
-</div>
-
-</div>
-
-
-<div
-id="weights"
-class="weights">
-
-<div class="empty">
-Belum ada berat dimasukkan.
-</div>
-
-</div>
-
-
-<div
-style="
-font-size:13px;
-color:#64748b;
-margin-top:10px">
-
-Nilai 10 ke atas dianggap gram dan ditukar kepada kg.
-Contoh 352 = 0.352 kg.
-
-</div>
-
-</div>
-
-
-<!-- ============================= -->
 <!-- KEPUTUSAN -->
-<!-- ============================= -->
+<section class="card">
+  <h2>📊 Keputusan Keseragaman</h2>
 
-<div class="card">
+  <div class="results">
+    <div class="box">
+      <div class="lab">JUMLAH SAMPEL</div>
+      <div class="val" id="n">0</div>
+    </div>
+    <div class="box">
+      <div class="lab">PURATA BERAT</div>
+      <div class="val" id="avg">0.00 kg</div>
+    </div>
+    <div class="box">
+      <div class="lab">MIN & MAKS</div>
+      <div class="val" id="mm">0.00 / 0.00</div>
+    </div>
+    <div class="box">
+      <div class="lab">NILAI CV</div>
+      <div class="val" id="cv">0.0%</div>
+    </div>
+  </div>
 
-<h2>
-📊 Keputusan Keseragaman
-</h2>
+  <div class="hero">
+    <div class="lab">UNIFORMITY ±10%</div>
+    <div class="val" id="uni">0.0%</div>
+    <div class="range" id="range">Julat: -</div>
+  </div>
+  <p class="muted">CV menggunakan sisihan piawai sampel (n−1). Uniformity ialah peratus sampel dalam julat ±10% daripada purata berat.</p>
+</section>
 
+<!-- REKOD FLOCK -->
+<section class="card">
+  <div class="status">
+    <div>
+      <h2 style="margin-bottom:5px;color:#0f766e">🐔 Rekod Flock Pro</h2>
+      <p class="muted" style="margin-top:0">Simpan keputusan pemeriksaan dan semak sejarah.</p>
+    </div>
+    <span class="badge">PRO</span>
+  </div>
 
-<div class="results">
+  <div class="grid">
+    <div>
+      <label for="flock">Nama / Kod Flock</label>
+      <input id="flock" placeholder="Contoh: Flock A1">
+    </div>
+    <div>
+      <label for="date">Tarikh Pemeriksaan</label>
+      <input id="date" type="date">
+    </div>
+    <div>
+      <label for="age">Umur Ayam (minggu)</label>
+      <input id="age" type="number" min="0" placeholder="Contoh: 28">
+    </div>
+    <div>
+      <label for="proBirds">Jumlah Ayam Dalam Reban</label>
+      <input id="proBirds" type="number" min="0" placeholder="Contoh: 6800">
+    </div>
+  </div>
 
+  <div style="margin-top:13px">
+    <label for="notes">Catatan</label>
+    <textarea id="notes" rows="3" placeholder="Catatan pemeriksaan mingguan..."></textarea>
+  </div>
 
-<div class="box">
+  <div class="results" style="margin-top:14px">
+    <div class="box"><div class="lab">UNIFORMITY</div><div class="val" id="pUni">0.0%</div></div>
+    <div class="box"><div class="lab">CV</div><div class="val" id="pCV">0.0%</div></div>
+    <div class="box"><div class="lab">PURATA BERAT</div><div class="val" id="pAvg">0.00 kg</div></div>
+    <div class="box"><div class="lab">DENSITY</div><div class="val" id="pDen">-</div></div>
+  </div>
 
-<div class="lab">
-JUMLAH SAMPEL
+  <div style="margin-top:12px">
+    <button type="button" class="g" id="saveRecord">💾 Simpan Rekod Flock</button>
+    <button type="button" class="x" id="clearPro">Kosongkan Maklumat</button>
+    <button type="button" class="b" id="printPage">🖨️ Cetak / PDF</button>
+  </div>
+
+  <h2 style="margin-top:25px">📋 Sejarah Pemeriksaan</h2>
+  <div style="margin-bottom:10px">
+    <button type="button" class="r" id="clearHistory">Padam Semua Sejarah</button>
+  </div>
+
+  <div class="tablewrap">
+    <table class="history">
+      <thead>
+        <tr>
+          <th>Tarikh</th><th>Flock</th><th>Umur</th>
+          <th>Uniformity</th><th>CV</th><th>Purata</th>
+          <th>Density</th><th>Catatan</th><th>Tindakan</th>
+        </tr>
+      </thead>
+      <tbody id="hist"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card">
+  <button type="button" class="b" id="calculateButton">✓ Kemaskini / Kira Semua</button>
+  <button type="button" class="x" id="exportCsv">Eksport Sejarah CSV</button>
+  <button type="button" class="r" id="resetAll">Reset Input Semasa</button>
+  <p class="muted">Data pemeriksaan disimpan dalam storan pelayar pada peranti ini. Eksport CSV boleh digunakan sebagai salinan rekod tambahan.</p>
+</section>
+
+<div class="footer">UniCVden Pro · Rujukan pengurusan ternakan ayam</div>
 </div>
-
-<div
-class="val"
-id="n">
-
-0
-
-</div>
-
-</div>
-
-
-<div class="box">
-
-<div class="lab">
-PURATA BERAT
-</div>
-
-<div
-class="val"
-id="avg">
-
-0.00 kg
-
-</div>
-
-</div>
-
-
-<div class="box">
-
-<div class="lab">
-MIN & MAKS
-</div>
-
-<div
-class="val"
-id="mm">
-
-0.00 / 0.00
-
-</div>
-
-</div>
-
-
-<div class="box">
-
-<div class="lab">
-NILAI CV
-</div>
-
-<div
-class="val"
-id="cv">
-
-0.0%
-
-</div>
-
-</div>
-
-</div>
-
-
-<div class="hero">
-
-<div class="lab">
-UNIFORMITY ±10%
-</div>
-
-<div
-class="val"
-id="uni">
-
-0.0%
-
-</div>
-
-<div
-class="range"
-id="range">
-
-Julat: -
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- ============================= -->
-<!-- UNICVDEN PRO -->
-<!-- ============================= -->
-
-<div class="card">
-
-<div
-style="
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:10px;
-flex-wrap:wrap">
-
-<div>
-
-<h2
-style="
-color:#0f766e;
-margin-bottom:4px">
-
-🐔 UniCVden Pro
-
-</h2>
-
-<div style="color:#64748b">
-
-Rekod flock, simpan keputusan dan sejarah pemeriksaan.
-
-</div>
-
-</div>
-
-
-<span class="badge">
-
-PRO 1.0
-
-</span>
-
-</div>
-
-
-<div
-class="grid"
-style="margin-top:14px">
-
-
-<div>
-
-<label>
-Nama / Kod Flock
-</label>
-
-<input
-id="flock"
-placeholder="Cth: Flock A1">
-
-</div>
-
-
-<div>
-
-<label>
-Tarikh Pemeriksaan
-</label>
-
-<input
-id="date"
-type="date">
-
-</div>
-
-
-<div>
-
-<label>
-Umur Ayam (Minggu)
-</label>
-
-<input
-id="age"
-type="number"
-min="0"
-placeholder="Cth: 28">
-
-</div>
-
-
-<div>
-
-<label>
-Jumlah Ayam Dalam Reban
-</label>
-
-<input
-id="proBirds"
-type="number"
-min="0"
-placeholder="Cth: 6800">
-
-</div>
-
-</div>
-
-
-<div style="margin-top:12px">
-
-<label>
-Catatan
-</label>
-
-<textarea
-id="notes"
-rows="2"
-placeholder="Cth: Pemeriksaan mingguan..."></textarea>
-
-</div>
-
-
-<div
-class="results"
-style="margin-top:12px">
-
-
-<div class="box">
-
-<div class="lab">
-UNIFORMITY
-</div>
-
-<div
-class="val"
-id="pUni">
-
-0.0%
-
-</div>
-
-</div>
-
-
-<div class="box">
-
-<div class="lab">
-CV
-</div>
-
-<div
-class="val"
-id="pCV">
-
-0.0%
-
-</div>
-
-</div>
-
-
-<div class="box">
-
-<div class="lab">
-PURATA BERAT
-</div>
-
-<div
-class="val"
-id="pAvg">
-
-0.00 kg
-
-</div>
-
-</div>
-
-
-<div class="box">
-
-<div class="lab">
-DENSITY
-</div>
-
-<div
-class="val"
-id="pDen">
-
--
-
-</div>
-
-</div>
-
-</div>
-
-
-<div style="margin-top:12px">
-
-<button
-class="g"
-onclick="saveRec()">
-
-💾 Simpan Rekod Flock
-
-</button>
-
-
-<button
-class="x"
-onclick="clearPro()">
-
-Kosongkan
-
-</button>
-
-</div>
-
-
-<h2
-style="margin-top:24px">
-
-📋 Sejarah Pemeriksaan
-
-</h2>
-
-
-<button
-class="r"
-onclick="clearHist()">
-
-Padam Semua Sejarah
-
-</button>
-
-
-<div
-class="tablewrap"
-style="margin-top:10px">
-
-
-<table class="history">
-
-<thead>
-
-<tr>
-
-<th>Tarikh</th>
-
-<th>Flock</th>
-
-<th>Umur</th>
-
-<th>Uniformity</th>
-
-<th>CV</th>
-
-<th>Purata</th>
-
-<th>Density</th>
-
-<th></th>
-
-</tr>
-
-</thead>
-
-
-<tbody id="hist"></tbody>
-
-</table>
-
-</div>
-
-</div>
-
-
-<!-- ============================= -->
-<!-- BUTTON BAWAH -->
-<!-- ============================= -->
-
-<div class="card">
-
-<button
-class="b"
-onclick="calculateAll()">
-
-✓ Kemaskini / Kira
-
-</button>
-
-
-<button
-class="x"
-onclick="window.print()">
-
-🖨️ Cetak / PDF
-
-</button>
-
-
-<button
-class="r"
-onclick="resetAll()">
-
-Reset Semua
-
-</button>
-
-</div>
-
-</div>
-
 
 <script>
+'use strict';
 
-let weights=[];
+const $ = id => document.getElementById(id);
 
+let weights = [];
+let nextWeightId = 1;
 
-const $=id=>
-document.getElementById(id);
-
+const HISTORY_KEY = 'unicvden_history';
+const FEED_DEFAULTS = [7315.2,10972.8,12435.84,7315.2,10972.8,10972.8];
 
 function today(){
-
-return new Date()
-.toISOString()
-.slice(0,10);
-
+  const d = new Date();
+  const local = new Date(d.getTime() - d.getTimezoneOffset()*60000);
+  return local.toISOString().slice(0,10);
 }
 
-
-/* ============================= */
-/* PARSE BERAT */
-/* ============================= */
-
-function pw(v){
-
-let x=parseFloat(
-String(v)
-.trim()
-.replace(',','.')
-);
-
-if(!isFinite(x)||x<=0)
-return NaN;
-
-
-/*
-
-Jika nilai 10 ke atas
-dianggap gram.
-
-Contoh:
-
-352 = 0.352 kg
-
-1850 = 1.850 kg
-
-*/
-
-return x>=10 ? x/1000 : x;
-
+function numberValue(id){
+  const n = Number($(id).value);
+  return Number.isFinite(n) && n >= 0 ? n : 0;
 }
 
-
-/* ============================= */
-/* TAMBAH BERAT */
-/* ============================= */
-
-function add(){
-
-let w=pw(
-$('weight').value
-);
-
-let q=parseInt(
-$('qty').value
-)||1;
-
-
-if(!isFinite(w)){
-
-alert(
-'Sila masukkan berat yang sah.'
-);
-
-return;
-
+function escapeHTML(value){
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+  })[ch]);
 }
 
+/* =========================
+   KEPADATAN REBAN
+========================= */
 
-for(
-let i=0;
-i<q;
-i++
-){
+function buildPartitions(){
+  const body = $('parts');
+  body.innerHTML = '';
 
-weights.push(w);
+  for(let i=1;i<=6;i++){
+    const tr = document.createElement('tr');
+    tr.dataset.partition = i;
+    tr.innerHTML = `
+      <td><strong>Partition ${i}</strong></td>
+      <td><input id="l${i}" type="number" min="0" step="any" placeholder="Panjang" aria-label="Panjang partition ${i}"></td>
+      <td><input id="w${i}" type="number" min="0" step="any" placeholder="Lebar" aria-label="Lebar partition ${i}"></td>
+      <td id="a${i}">0.00</td>
+      <td id="c${i}">0</td>
+      <td id="d${i}">0.0</td>`;
+    body.appendChild(tr);
+  }
 
+  updatePartitionVisibility();
 }
 
+function updatePartitionVisibility(){
+  const count = Math.min(6, Math.max(1, parseInt($('partCount').value,10) || 6));
 
-$('weight').value='';
+  document.querySelectorAll('#parts tr').forEach(tr=>{
+    tr.classList.toggle('hidden', Number(tr.dataset.partition) > count);
+  });
 
-$('qty').value=1;
-
-
-render();
-
-calculateAll();
-
-$('weight').focus();
-
+  calculateDensity();
 }
 
+function calculateDensity(){
+  const total = Math.floor(numberValue('totalBirds'));
+  const count = Math.min(6, Math.max(1, parseInt($('partCount').value,10) || 6));
+  const unit = $('dimensionUnit').value;
+  const factor = unit === 'ft' ? 0.3048 : 1;
 
-/* ============================= */
-/* UNDO */
-/* ============================= */
+  $('lengthHeading').textContent = unit === 'ft' ? 'Panjang (ft)' : 'Panjang (m)';
+  $('widthHeading').textContent = unit === 'ft' ? 'Lebar (ft)' : 'Lebar (m)';
 
-function undo(){
+  const areas = [];
+  let totalArea = 0;
 
-weights.pop();
+  for(let i=1;i<=6;i++){
+    const active = i <= count;
+    const length = active ? numberValue('l'+i) * factor : 0;
+    const width = active ? numberValue('w'+i) * factor : 0;
+    const area = length * width;
 
-render();
+    areas.push(area);
+    totalArea += area;
 
-calculateAll();
+    $('a'+i).textContent = area.toFixed(2);
+    $('c'+i).textContent = '0';
+    $('d'+i).textContent = area > 0 ? '0.0' : '-';
+  }
 
+  // Agihan bilangan ayam berdasarkan luas partition.
+  // Baki dibahagikan supaya jumlah akhir sama dengan jumlah ayam.
+  const allocation = new Array(6).fill(0);
+
+  if(total > 0 && totalArea > 0){
+    const raw = areas.map(a => a / totalArea * total);
+    const floors = raw.map(Math.floor);
+    let remaining = total - floors.reduce((a,b)=>a+b,0);
+
+    const order = raw.map((value,i)=>({i, fraction:value-floors[i]}))
+      .sort((a,b)=>b.fraction-a.fraction);
+
+    for(let j=0;j<order.length && remaining>0;j++){
+      if(areas[order[j].i] > 0){
+        floors[order[j].i]++;
+        remaining--;
+      }
+    }
+
+    for(let i=0;i<6;i++) allocation[i] = floors[i];
+  }
+
+  for(let i=1;i<=6;i++){
+    $('c'+i).textContent = allocation[i-1];
+    $('d'+i).textContent = areas[i-1] > 0
+      ? (allocation[i-1]/areas[i-1]).toFixed(1)
+      : '-';
+  }
+
+  $('capacity').textContent =
+    `${Math.floor(totalArea*10)} - ${Math.floor(totalArea*12)}`;
+
+  $('areaTotal').textContent = `Jumlah luas: ${totalArea.toFixed(2)} m²`;
+  $('partStatus').textContent = totalArea > 0
+    ? `Jumlah ayam: ${total.toLocaleString('en-US')} | Luas: ${totalArea.toFixed(2)} m²`
+    : 'Status Keseluruhan Reban: -';
+  $('partBadge').textContent = totalArea > 0 ? 'Dikira' : 'Sedia Kira';
+
+  return {total, sum:totalArea};
 }
 
+/* =========================
+   FEED SPACE
+========================= */
 
-/* ============================= */
-/* RESET BERAT */
-/* ============================= */
+function buildFeedRows(){
+  const body = $('feedRows');
+  body.innerHTML = '';
 
-function resetW(){
-
-weights=[];
-
-render();
-
-calculateAll();
-
+  for(let i=1;i<=6;i++){
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>Bilik ${i}</td>
+      <td><input id="feedLine${i}" type="number" min="0" step="any" placeholder="${FEED_DEFAULTS[i-1]}" aria-label="Panjang feeder bilik ${i}"></td>
+      <td><input id="actualBirds${i}" type="number" min="0" step="1" placeholder="Actual" aria-label="Ayam actual bilik ${i}"></td>
+      <td><strong id="idealBirds${i}">0</strong></td>`;
+    body.appendChild(tr);
+  }
 }
 
+function calculateFeedSpace(){
+  const birds = Math.floor(numberValue('feedBirds'));
+  const lengths = [];
+  let totalLength = 0;
 
-/* ============================= */
-/* PAPAR BERAT */
-/* ============================= */
+  for(let i=1;i<=6;i++){
+    const length = numberValue('feedLine'+i);
+    lengths.push(length);
+    totalLength += length;
+  }
 
-function render(){
+  // Agihkan jumlah ayam mengikut panjang feeder setiap bilik.
+  const ideals = lengths.map(length =>
+    totalLength > 0 && birds > 0 ? Math.floor(length/totalLength*birds) : 0
+  );
 
-let b=$('weights');
+  let remaining = Math.max(0, birds - ideals.reduce((a,b)=>a+b,0));
 
+  const order = lengths.map((length,i)=>({
+    i, fraction:totalLength > 0 ? length/totalLength*birds-ideals[i] : 0
+  })).sort((a,b)=>b.fraction-a.fraction);
 
-if(!weights.length){
+  for(let j=0;j<order.length && remaining>0;j++){
+    if(lengths[order[j].i] > 0){
+      ideals[order[j].i]++;
+      remaining--;
+    }
+  }
 
-b.innerHTML=
-'<div class="empty">'+
-'Belum ada berat dimasukkan.'+
-'</div>';
+  for(let i=1;i<=6;i++){
+    $('idealBirds'+i).textContent = ideals[i-1];
+  }
 
-return;
-
+  $('feedTotalLength').textContent = totalLength.toFixed(2)+' cm';
+  $('feedSpaceResult').textContent =
+    birds > 0 ? (totalLength/birds).toFixed(2)+' cm/ekor' : '0.00 cm/ekor';
 }
 
+/* =========================
+   INPUT BERAT
+========================= */
 
-b.innerHTML=
-weights
-.slice(0,150)
-.map(
-(w,i)=>
-`<div class="weight">
-${i+1}. ${w.toFixed(3)} kg
-</div>`
-)
-.join('');
+function parseWeight(value){
+  const cleaned = String(value).trim().replace(',','.');
+  const n = Number(cleaned);
 
+  if(!Number.isFinite(n) || n <= 0) return NaN;
+
+  // Nilai 10 atau lebih dianggap gram.
+  return n >= 10 ? n/1000 : n;
 }
 
+function addWeight(){
+  const w = parseWeight($('weight').value);
+  const q = Math.floor(Number($('qty').value));
 
-/* ============================= */
-/* INPUT PUKAL */
-/* ============================= */
+  if(!Number.isFinite(w) || !Number.isInteger(q) || q < 1){
+    alert('Masukkan berat dan bilangan ayam yang sah.');
+    return;
+  }
 
-function bulk(){
+  if(q > 10000 || weights.length + q > 50000){
+    alert('Bilangan terlalu besar. Masukkan secara berperingkat.');
+    return;
+  }
 
-let a=
-$('bulkText')
-.value
-.split(/[\n,;]+/);
+  for(let i=0;i<q;i++){
+    weights.push({id:nextWeightId++, value:w});
+  }
 
-let c=0;
+  $('weight').value = '';
+  $('qty').value = '1';
 
-
-a.forEach(s=>{
-
-let m=
-s.trim()
-.match(
-/^(.+?)\s*(?:x|\*)\s*(\d+)$/i
-);
-
-
-if(m){
-
-let w=pw(m[1]);
-
-let q=parseInt(m[2]);
-
-
-if(isFinite(w)){
-
-for(
-let i=0;
-i<q;
-i++
-){
-
-weights.push(w);
-
+  renderWeights();
+  calculateAll();
+  $('weight').focus();
 }
 
-c+=q;
-
+function undoWeight(){
+  if(weights.length) weights.pop();
+  renderWeights();
+  calculateAll();
 }
 
+function resetWeights(){
+  if(weights.length && !confirm('Reset semua sampel berat semasa?')) return;
+  weights = [];
+  renderWeights();
+  calculateAll();
 }
 
-else{
+function addBulk(){
+  const text = $('bulkText').value.trim();
 
-s.trim()
-.split(/\s+/)
-.forEach(v=>{
+  if(!text){
+    alert('Masukkan senarai berat dahulu.');
+    return;
+  }
 
-let w=pw(v);
+  const tokens = text.split(/[\s,;]+/).filter(Boolean);
+  const added = [];
 
-if(isFinite(w)){
+  for(const token of tokens){
+    const match = token.match(/^(.+?)[x*](\d+)$/i);
 
-weights.push(w);
+    if(match){
+      const w = parseWeight(match[1]);
+      const q = parseInt(match[2],10);
 
-c++;
+      if(Number.isFinite(w) && q > 0 && q <= 10000){
+        for(let i=0;i<q;i++) added.push(w);
+      }
+    }else{
+      const w = parseWeight(token);
+      if(Number.isFinite(w)) added.push(w);
+    }
+  }
 
+  if(!added.length){
+    alert('Tiada berat yang sah ditemui. Contoh: 1.85 atau 352 atau 1.85x10');
+    return;
+  }
+
+  if(weights.length + added.length > 50000){
+    alert('Bilangan sampel terlalu besar.');
+    return;
+  }
+
+  added.forEach(value=>weights.push({id:nextWeightId++,value}));
+  $('bulkText').value = '';
+
+  renderWeights();
+  calculateAll();
+
+  alert(`${added.length} sampel berat berjaya dimasukkan.`);
 }
 
-});
+function renderWeights(){
+  const box = $('weights');
+  $('weightCount').textContent = `${weights.length.toLocaleString('en-US')} sampel`;
 
+  if(!weights.length){
+    box.innerHTML = '<div class="empty">Belum ada berat dimasukkan.</div>';
+    return;
+  }
+
+  // Hadkan bilangan kad visual supaya paparan telefon kekal ringan.
+  const display = weights.slice(-150);
+
+  box.innerHTML = display.map((item,index)=>`
+    <div class="weight">
+      ${weights.length-display.length+index+1}. ${item.value.toFixed(3)} kg
+    </div>
+  `).join('');
 }
 
-});
+function calculateWeights(){
+  const values = weights.map(item=>item.value);
+  const n = values.length;
 
+  if(!n){
+    return {n:0,avg:0,min:0,max:0,sd:0,cv:0,uni:0,low:0,high:0,within:0};
+  }
 
-if(!c){
+  const avg = values.reduce((a,b)=>a+b,0)/n;
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const low = avg*0.9;
+  const high = avg*1.1;
+  const within = values.filter(x=>x>=low && x<=high).length;
 
-alert(
-'Tiada berat sah ditemui.'
-);
+  let variance = 0;
+  if(n>1){
+    variance = values.reduce((sum,x)=>sum+(x-avg)**2,0)/(n-1);
+  }
 
-return;
+  const sd = Math.sqrt(variance);
+  const cv = avg > 0 ? sd/avg*100 : 0;
 
+  return {
+    n,avg,min,max,sd,cv,
+    uni:within/n*100,
+    low,high,within
+  };
 }
 
+function renderWeightResults(r){
+  $('n').textContent = r.n.toLocaleString('en-US');
+  $('avg').textContent = r.avg.toFixed(2)+' kg';
+  $('mm').textContent = `${r.min.toFixed(2)} / ${r.max.toFixed(2)}`;
+  $('cv').textContent = r.cv.toFixed(1)+'%';
+  $('uni').textContent = r.uni.toFixed(1)+'%';
 
-$('bulkText').value='';
+  $('range').textContent = r.n
+    ? `Julat ±10%: ${r.low.toFixed(2)} – ${r.high.toFixed(2)} kg | ${r.within}/${r.n} ekor dalam julat`
+    : 'Julat: -';
 
-render();
-
-calculateAll();
-
+  $('pUni').textContent = r.uni.toFixed(1)+'%';
+  $('pCV').textContent = r.cv.toFixed(1)+'%';
+  $('pAvg').textContent = r.avg.toFixed(2)+' kg';
 }
 
-
-/* ============================= */
-/* TAB */
-/* ============================= */
-
-function tab(t){
-
-$('manual')
-.classList
-.toggle(
-'hidden',
-t!='m'
-);
-
-
-$('bulk')
-.classList
-.toggle(
-'hidden',
-t=='m'
-);
-
-
-$('tm')
-.classList
-.toggle(
-'active',
-t=='m'
-);
-
-
-$('tb')
-.classList
-.toggle(
-'active',
-t=='b'
-);
-
-}
-
-
-/* ============================= */
-/* KIRA UNIFORMITY */
-/* ============================= */
-
-function calc(){
-
-let n=weights.length;
-
-
-if(!n){
-
-return{
-
-n:0,
-avg:0,
-min:0,
-max:0,
-sd:0,
-cv:0,
-uni:0,
-low:0,
-high:0,
-within:0
-
-};
-
-}
-
-
-let avg=
-weights.reduce(
-(a,b)=>a+b,
-0
-)/n;
-
-
-let min=
-Math.min(...weights);
-
-
-let max=
-Math.max(...weights);
-
-
-let low=
-avg*.9;
-
-
-let high=
-avg*1.1;
-
-
-let within=
-weights.filter(
-x=>
-x>=low &&
-x<=high
-).length;
-
-
-let v=0;
-
-
-if(n>1){
-
-v=
-weights.reduce(
-(s,x)=>
-s+(x-avg)**2,
-0
-)/(n-1);
-
-}
-
-
-let sd=Math.sqrt(v);
-
-
-let cv=
-avg?
-sd/avg*100:
-0;
-
-
-return{
-
-n,
-avg,
-min,
-max,
-sd,
-cv,
-uni:
-within/n*100,
-low,
-high,
-within
-
-};
-
-}
-
-
-/* ============================= */
-/* BUILD PARTITION */
-/* ============================= */
-
-function build(){
-
-let s='';
-
-
-for(
-let i=1;
-i<=6;
-i++
-){
-
-s+=`
-
-<tr>
-
-<td>
-<b>Partition ${i}</b>
-</td>
-
-<td>
-
-<input
-id="l${i}"
-type="number"
-min="0"
-step="any">
-
-</td>
-
-<td>
-
-<input
-id="w${i}"
-type="number"
-min="0"
-step="any">
-
-</td>
-
-<td id="a${i}">
-0.00
-</td>
-
-<td id="c${i}">
-0
-</td>
-
-<td id="d${i}">
-0.0
-</td>
-
-</tr>
-
-`;
-
-}
-
-
-$('parts').innerHTML=s;
-
-}
-
-
-/* ============================= */
-/* DENSITY */
-/* ============================= */
-
-function density(){
-
-let total=
-parseFloat(
-$('totalBirds').value
-)||0;
-
-
-let areas=[];
-
-let sum=0;
-
-
-for(
-let i=1;
-i<=6;
-i++
-){
-
-let a=
-(
-parseFloat(
-$('l'+i).value
-)||0
-)
-*
-(
-parseFloat(
-$('w'+i).value
-)||0
-);
-
-
-areas.push(a);
-
-sum+=a;
-
-
-$('a'+i)
-.textContent=
-a.toFixed(2);
-
-}
-
-
-/* ALLOCATE AYAM */
-
-let alloc=
-new Array(6)
-.fill(0);
-
-
-if(total&&sum){
-
-let raw=
-areas.map(
-a=>
-a/sum*total
-);
-
-
-let fl=
-raw.map(
-Math.floor
-);
-
-
-let rem=
-Math.round(
-total-
-fl.reduce(
-(a,b)=>a+b,
-0
-)
-);
-
-
-raw
-.map(
-(x,i)=>
-[
-x-fl[i],
-i
-]
-)
-.sort(
-(a,b)=>b[0]-a[0]
-)
-.slice(
-0,
-rem
-)
-.forEach(
-x=>
-fl[x[1]]++
-);
-
-
-alloc=fl;
-
-function density(){
-
-let total =
-parseFloat($('totalBirds').value) || 0;
-
-const unit = $('dimensionUnit').value;
-const factor = unit === 'ft' ? 0.3048 : 1;
-
-// Kemaskini tajuk kolum mengikut unit pilihan
-$('lengthHeading').textContent =
-unit === 'ft' ? 'Panjang (ft)' : 'Panjang (m)';
-
-$('widthHeading').textContent =
-unit === 'ft' ? 'Lebar (ft)' : 'Lebar (m)';
-
-let areas = [];
-let sum = 0;
-
-// Tukar ukuran kepada meter sebelum kira luas
-for(let i = 1; i <= 6; i++){
-
-let length =
-(parseFloat($('l' + i).value) || 0) * factor;
-
-let width =
-(parseFloat($('w' + i).value) || 0) * factor;
-
-let area = length * width;
-
-areas.push(area);
-sum += area;
-
-$('a' + i).textContent = area.toFixed(2);
-
-}
-
-// Agihkan ayam mengikut luas setiap partition
-let alloc = new Array(6).fill(0);
-
-if(total > 0 && sum > 0){
-
-let raw = areas.map(a => a / sum * total);
-let fl = raw.map(Math.floor);
-
-let rem = Math.round(
-total - fl.reduce((a,b) => a + b, 0)
-);
-
-raw.map((x,i) => [x - fl[i], i])
-.sort((a,b) => b[0] - a[0])
-.slice(0, rem)
-.forEach(x => fl[x[1]]++);
-
-alloc = fl;
-
-}
-
-// Paparkan bilangan ayam dan density setiap partition
-for(let i = 1; i <= 6; i++){
-
-$('c' + i).textContent = alloc[i-1];
-
-$('d' + i).textContent =
-areas[i-1] > 0
-? (alloc[i-1] / areas[i-1]).toFixed(1)
-: '0.0';
-
-}
-
-// Kapasiti ideal kekal 10–12 ekor bagi setiap m²
-$('capacity').textContent =
-`${Math.floor(sum * 10)} - ${Math.floor(sum * 12)}`;
-
-$('partStatus').textContent =
-`Status Keseluruhan Reban: ${sum > 0 ? 'Dikira' : '-'}`;
-
-$('partBadge').textContent =
-sum > 0 ? 'Dikira' : 'Sedia Kira';
-
-return {
-total,
-sum
-};
-
-}
-
-
-
-/* ============================= */
-/* KIRA SEMUA */
-/* ============================= */
+/* =========================
+   KIRAAN UTAMA
+========================= */
 
 function calculateAll(){
+  // Modul berat dikira secara bebas daripada modul density.
+  const weightResult = calculateWeights();
+  renderWeightResults(weightResult);
 
-let r=calc();
+  const densityResult = calculateDensity();
+  calculateFeedSpace();
 
-let d=density();
+  const flockBirds = Math.floor(numberValue('proBirds')) ||
+                    densityResult.total;
 
+  $('pDen').textContent = flockBirds > 0 && densityResult.sum > 0
+    ? (flockBirds/densityResult.sum).toFixed(1)+' ekor/m²'
+    : '-';
 
-$('n')
-.textContent=
-r.n;
-
-
-$('avg')
-.textContent=
-r.avg.toFixed(2)
-+' kg';
-
-
-$('mm')
-.textContent=
-r.min.toFixed(2)
-+' / '+
-r.max.toFixed(2);
-
-
-$('cv')
-.textContent=
-r.cv.toFixed(1)
-+'%';
-
-
-$('uni')
-.textContent=
-r.uni.toFixed(1)
-+'%';
-
-
-$('range')
-.textContent=
-r.n
-?
-`Julat ±10%: ${r.low.toFixed(2)} – ${r.high.toFixed(2)} kg | ${r.within}/${r.n} ekor dalam julat`
-:
-'Julat: -';
-
-
-/* PRO */
-
-$('pUni')
-.textContent=
-r.uni.toFixed(1)
-+'%';
-
-
-$('pCV')
-.textContent=
-r.cv.toFixed(1)
-+'%';
-
-
-$('pAvg')
-.textContent=
-r.avg.toFixed(2)
-+' kg';
-
-
-let birds=
-parseFloat(
-$('proBirds').value
-)||d.total;
-
-
-$('pDen')
-.textContent=
-birds&&d.sum
-?
-(
-birds/d.sum
-).toFixed(1)
-+' ekor/m²'
-:
-'-';
-
+  return {weights:weightResult,density:densityResult};
 }
 
+/* =========================
+   SEJARAH PEMERIKSAAN
+========================= */
 
-/* ============================= */
-/* LOCAL STORAGE */
-/* ============================= */
-
-function hist(){
-
-let h=[];
-
-
-try{
-
-h=
-JSON.parse(
-localStorage
-.getItem(
-'unicvden_history'
-)
-||'[]'
-);
-
+function readHistory(){
+  try{
+    const data = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
 }
 
-catch(e){
+function renderHistory(){
+  const records = readHistory();
+  const body = $('hist');
 
-h=[];
+  if(!records.length){
+    body.innerHTML = '<tr><td colspan="9" class="empty">Belum ada rekod pemeriksaan.</td></tr>';
+    return;
+  }
 
+  body.innerHTML = records.map(record=>`
+    <tr>
+      <td>${escapeHTML(record.date)}</td>
+      <td>${escapeHTML(record.flock)}</td>
+      <td>${escapeHTML(record.age)}</td>
+      <td>${Number(record.uni||0).toFixed(1)}%</td>
+      <td>${Number(record.cv||0).toFixed(1)}%</td>
+      <td>${Number(record.avg||0).toFixed(2)} kg</td>
+      <td>${record.den == null ? '-' : Number(record.den).toFixed(1)+' ekor/m²'}</td>
+      <td>${escapeHTML(record.notes || '-')}</td>
+      <td><button type="button" class="r" data-delete-record="${escapeHTML(record.id)}">Padam</button></td>
+    </tr>
+  `).join('');
 }
 
+function saveRecord(){
+  const result = calculateAll();
+  const r = result.weights;
+  const d = result.density;
 
-return h;
+  if(!r.n){
+    alert('Masukkan sampel berat sebelum menyimpan rekod.');
+    return;
+  }
 
+  const birds = Math.floor(numberValue('proBirds')) || d.total;
+
+  const record = {
+    id: String(Date.now())+'-'+Math.random().toString(36).slice(2,7),
+    date: $('date').value || today(),
+    flock: $('flock').value.trim() || '-',
+    age: $('age').value || '-',
+    birds,
+    uni:r.uni,
+    cv:r.cv,
+    avg:r.avg,
+    den:birds > 0 && d.sum > 0 ? birds/d.sum : null,
+    notes:$('notes').value.trim(),
+    samples:r.n
+  };
+
+  try{
+    const records = readHistory();
+    records.unshift(record);
+    localStorage.setItem(HISTORY_KEY,JSON.stringify(records.slice(0,200)));
+    renderHistory();
+    alert('Rekod flock berjaya disimpan.');
+  }catch(error){
+    alert('Rekod tidak dapat disimpan. Storan pelayar mungkin penuh.');
+  }
 }
 
+function deleteRecord(id){
+  if(!confirm('Padam rekod pemeriksaan ini?')) return;
 
-/* ============================= */
-/* PAPAR SEJARAH */
-/* ============================= */
+  const records = readHistory().filter(record=>String(record.id)!==String(id));
 
-function renderHist(){
-
-let h=hist();
-
-
-$('hist')
-.innerHTML=
-h.length
-?
-h.map(
-x=>
-
-`<tr>
-
-<td>${x.date}</td>
-
-<td>
-${esc(x.flock)}
-</td>
-
-<td>
-${esc(x.age)}
-</td>
-
-<td>
-${x.uni.toFixed(1)}%
-</td>
-
-<td>
-${x.cv.toFixed(1)}%
-</td>
-
-<td>
-${x.avg.toFixed(2)} kg
-</td>
-
-<td>
-${
-x.den==null
-?
-'-'
-:
-x.den.toFixed(1)
-+' ekor/m²'
-}
-</td>
-
-<td>
-
-<button
-class="r"
-onclick="delRec(${x.id})">
-
-✕
-
-</button>
-
-</td>
-
-</tr>`
-
-).join('')
-
-:
-
-`<tr>
-
-<td
-colspan="8"
-class="empty">
-
-Belum ada rekod.
-
-</td>
-
-</tr>`;
-
+  try{
+    localStorage.setItem(HISTORY_KEY,JSON.stringify(records));
+    renderHistory();
+  }catch(error){
+    alert('Rekod gagal dikemaskini.');
+  }
 }
 
+function clearHistory(){
+  if(!confirm('Padam semua sejarah pemeriksaan? Tindakan ini tidak boleh dibatalkan.')) return;
 
-/* ============================= */
-/* SIMPAN REKOD */
-/* ============================= */
-
-function saveRec(){
-
-let r=calc();
-
-let d=density();
-
-
-let birds=
-parseFloat(
-$('proBirds').value
-)||d.total;
-
-
-let h=hist();
-
-
-h.unshift({
-
-id:Date.now(),
-
-date:
-$('date').value
-||
-today(),
-
-flock:
-$('flock').value
-||
-'-',
-
-age:
-$('age').value
-||
-'-',
-
-uni:
-r.uni,
-
-cv:
-r.cv,
-
-avg:
-r.avg,
-
-den:
-birds&&d.sum
-?
-birds/d.sum
-:
-null
-
-});
-
-
-localStorage
-.setItem(
-'unicvden_history',
-JSON.stringify(
-h.slice(0,100)
-)
-);
-
-
-renderHist();
-
-
-alert(
-'Rekod flock berjaya disimpan.'
-);
-
+  localStorage.removeItem(HISTORY_KEY);
+  renderHistory();
 }
-
-
-/* ============================= */
-/* PADAM REKOD */
-/* ============================= */
-
-function delRec(id){
-
-localStorage.setItem(
-
-'unicvden_history',
-
-JSON.stringify(
-
-hist()
-.filter(
-x=>x.id!==id
-)
-
-)
-
-);
-
-renderHist();
-
-}
-
-
-/* ============================= */
-/* PADAM SEMUA SEJARAH */
-/* ============================= */
-
-function clearHist(){
-
-if(
-confirm(
-'Padam semua sejarah pemeriksaan?'
-)
-){
-
-localStorage.removeItem(
-'unicvden_history'
-);
-
-renderHist();
-
-}
-
-}
-
-
-/* ============================= */
-/* CLEAR PRO */
-/* ============================= */
 
 function clearPro(){
-
-$('flock').value='';
-
-$('age').value='';
-
-$('proBirds').value='';
-
-$('notes').value='';
-
-$('date').value=
-today();
-
-calculateAll();
-
+  $('flock').value = '';
+  $('age').value = '';
+  $('proBirds').value = '';
+  $('notes').value = '';
+  $('date').value = today();
+  calculateAll();
 }
 
+/* =========================
+   TAB INPUT
+========================= */
 
-/* ============================= */
-/* ESCAPE HTML */
-/* ============================= */
+function selectTab(tab){
+  const manual = tab === 'manual';
 
-function esc(s){
-
-return String(s)
-.replace(
-/[&<>"']/g,
-m=>
-({
-
-'&':'&amp;',
-'<':'&lt;',
-'>':'&gt;',
-'"':'&quot;',
-"'":'&#039;'
-
-}[m])
-);
-
+  $('manual').classList.toggle('hidden',!manual);
+  $('bulk').classList.toggle('hidden',manual);
+  $('tm').classList.toggle('active',manual);
+  $('tb').classList.toggle('active',!manual);
 }
 
+/* =========================
+   EKSPORT CSV
+========================= */
 
-/* ============================= */
-/* RESET SEMUA */
-/* ============================= */
+function exportCSV(){
+  const records = readHistory();
+
+  if(!records.length){
+    alert('Belum ada sejarah untuk dieksport.');
+    return;
+  }
+
+  const headers = ['Tarikh','Flock','Umur Minggu','Jumlah Ayam','Uniformity %','CV %','Purata kg','Density ekor/m2','Sampel','Catatan'];
+
+  const csvCell = value =>
+    '"' + String(value ?? '').replace(/"/g,'""') + '"';
+
+  const lines = [
+    headers.map(csvCell).join(','),
+    ...records.map(r=>[
+      r.date,r.flock,r.age,r.birds,
+      Number(r.uni||0).toFixed(1),
+      Number(r.cv||0).toFixed(1),
+      Number(r.avg||0).toFixed(3),
+      r.den == null ? '' : Number(r.den).toFixed(2),
+      r.samples,r.notes
+    ].map(csvCell).join(','))
+  ];
+
+  const blob = new Blob(['\uFEFF'+lines.join('\r\n')],{
+    type:'text/csv;charset=utf-8;'
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'UniCVden-Sejarah-'+today()+'.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/* =========================
+   RESET INPUT SEMASA
+========================= */
 
 function resetAll(){
+  if(!confirm('Kosongkan semua input semasa? Sejarah yang disimpan tidak akan dipadam.')) return;
 
-if(
-!confirm(
-'Reset semua input?'
-)
-)return;
+  weights = [];
+  nextWeightId = 1;
 
+  [
+    'totalBirds','feedBirds','weight','bulkText',
+    'flock','age','proBirds','notes'
+  ].forEach(id=>$(id).value='');
 
-weights=[];
+  $('partCount').value = '6';
+  $('dimensionUnit').value = 'm';
+  $('qty').value = '1';
+  $('date').value = today();
 
+  for(let i=1;i<=6;i++){
+    $('l'+i).value = '';
+    $('w'+i).value = '';
+    $('feedLine'+i).value = '';
+    $('actualBirds'+i).value = '';
+  }
 
-document
-.querySelectorAll(
-'input,textarea'
-)
-.forEach(
-e=>e.value=''
-);
-
-
-$('qty').value=1;
-
-$('partCount').value=6;
-
-$('date').value=
-today();
-
-
-build();
-
-render();
-
-calculateAll();
-
+  renderWeights();
+  updatePartitionVisibility();
+  calculateAll();
 }
 
+/* =========================
+   EVENT LISTENERS
+========================= */
 
-/* ============================= */
-/* AUTO KIRA */
-/* ============================= */
+$('partCount').addEventListener('change',calculateAll);
+$('dimensionUnit').addEventListener('change',calculateAll);
+$('addWeight').addEventListener('click',addWeight);
+$('undoWeight').addEventListener('click',undoWeight);
+$('resetWeight').addEventListener('click',resetWeights);
+$('addBulk').addEventListener('click',addBulk);
+$('saveRecord').addEventListener('click',saveRecord);
+$('clearPro').addEventListener('click',clearPro);
+$('clearHistory').addEventListener('click',clearHistory);
+$('calculateButton').addEventListener('click',calculateAll);
+$('exportCsv').addEventListener('click',exportCSV);
+$('resetAll').addEventListener('click',resetAll);
+$('printPage').addEventListener('click',()=>window.print());
 
-document.addEventListener(
-'input',
-e=>{
+$('tm').addEventListener('click',()=>selectTab('manual'));
+$('tb').addEventListener('click',()=>selectTab('bulk'));
 
-if(
-e.target.matches(
-'input,textarea'
-)
-){
+$('weight').addEventListener('keydown',event=>{
+  if(event.key==='Enter'){
+    event.preventDefault();
+    addWeight();
+  }
+});
 
-calculateAll();
+document.addEventListener('input',event=>{
+  const id = event.target.id || '';
 
+  if(
+    id === 'totalBirds' ||
+    id === 'proBirds' ||
+    id === 'partCount' ||
+    id === 'dimensionUnit' ||
+    /^([lw][1-6])$/.test(id)
+  ){
+    calculateAll();
+    return;
+  }
+
+  if(
+    id === 'feedBirds' ||
+    /^feedLine[1-6]$/.test(id)
+  ){
+    calculateFeedSpace();
+  }
+});
+
+$('hist').addEventListener('click',event=>{
+  const button = event.target.closest('[data-delete-record]');
+  if(button) deleteRecord(button.dataset.deleteRecord);
+});
+
+/* =========================
+   MULA APLIKASI
+========================= */
+
+function init(){
+  buildPartitions();
+  buildFeedRows();
+
+  $('date').value = today();
+
+  renderWeights();
+  renderHistory();
+  calculateAll();
+
+  // Daftar service worker hanya jika fail tersedia pada lokasi ini.
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+  }
 }
 
-});
-
-
-document.addEventListener(
-'change',
-e=>{
-
-if(
-e.target.matches(
-'input,textarea'
-)
-){
-
-calculateAll();
-
-}
-
-});
-
-
-/* ENTER TAMBAH BERAT */
-
-$('weight')
-.addEventListener(
-'keydown',
-e=>{
-
-if(
-e.key==='Enter'
-){
-
-add();
-
-}
-
-});
-
-
-/* ============================= */
-/* LOAD */
-/* ============================= */
-
-window.addEventListener(
-'load',
-()=>{
-
-build();
-
-$('date').value=
-today();
-
-renderHist();
-
-render();
-
-calculateAll();
-
-});
-
-
-/* ============================= */
-/* SERVICE WORKER */
-/* ============================= */
-
-if(
-'serviceWorker'
-in navigator
-){
-
-window.addEventListener(
-'load',
-()=>{
-
-navigator
-.serviceWorker
-.register(
-'./service-worker.js'
-)
-.catch(
-()=>{}
-);
-
-});
-
-}
-
-/* ================= AUTO KIRA FEED SPACE 6 LINE ================= */
-
-function calculateFeedSpace() {
-
-    const birds = Number(document.getElementById("feedBirds")?.value) || 0;
-
-    let totalLength = 0;
-
-    for (let i = 1; i <= 6; i++) {
-        const value = Number(
-            document.getElementById("feedLine" + i)?.value
-        ) || 0;
-
-        totalLength += value;
-    }
-
-    const totalEl = document.getElementById("feedTotalLength");
-    const spaceEl = document.getElementById("feedSpaceResult");
-
-    if (totalEl) {
-        totalEl.textContent =
-            totalLength.toFixed(2) + " cm";
-    }
-
-    if (spaceEl) {
-
-        if (birds > 0) {
-
-            const space = totalLength / birds;
-
-            spaceEl.textContent =
-                space.toFixed(2) + " cm/ekor";
-
-        } else {
-
-            spaceEl.textContent =
-                "0.00 cm/ekor";
-        }
-    }
-}
-
-/* ================= TAMAT AUTO KIRA FEED SPACE ================= */ /* ================= AUTO KIRA BILIK & AYAM ================= */
-
-function calculateBilikAyam() {
-
-    const birdsEl = document.getElementById("feedBirds");
-    const birds = Number(birdsEl?.value) || 0;
-
-    const rows = document.querySelectorAll(".feed-table tbody tr");
-
-    let totalFeeder = 0;
-
-    // Kira jumlah panjang feeder
-    rows.forEach(function(row) {
-
-        const feederInput =
-            row.querySelector('input[type="number"]');
-
-        const feeder =
-            Number(feederInput?.value) || 0;
-
-        totalFeeder += feeder;
-    });
-
-    let jumlahAyamSepatutnya = 0;
-
-    rows.forEach(function(row, index) {
-
-        const feederInput =
-            row.querySelector('input[type="number"]');
-
-        const feeder =
-            Number(feederInput?.value) || 0;
-
-        const idealCell =
-            row.children[3];
-
-        if (
-            index === rows.length - 1 &&
-            birds > 0
-        ) {
-
-            const baki =
-                birds - jumlahAyamSepatutnya;
-
-            if (idealCell) {
-                idealCell.textContent =
-                    Math.max(0, baki);
-            }
-
-        } else {
-
-            const ideal =
-                totalFeeder > 0 && birds > 0
-                    ? Math.round(
-                        (feeder / totalFeeder) * birds
-                    )
-                    : 0;
-
-            if (idealCell) {
-                idealCell.textContent = ideal;
-            }
-
-            jumlahAyamSepatutnya += ideal;
-        }
-    });
-
-    const totalEl =
-        document.getElementById("feedTotalLength");
-
-    if (totalEl) {
-        totalEl.textContent =
-            totalFeeder.toFixed(2) + " cm";
-    }
-
-    const spaceEl =
-        document.getElementById("feedSpace");
-
-    if (spaceEl) {
-
-        spaceEl.textContent =
-            birds > 0
-                ? (totalFeeder / birds).toFixed(2) + " cm/ekor"
-                : "0.00 cm/ekor";
-    }
-}
-
-
-/* Auto kira bila input berubah */
-
-document.addEventListener("input", function(event) {
-
-    if (
-        event.target.matches(
-            "#feedBirds, #feedLine1, #feedLine2, #feedLine3, #feedLine4, #feedLine5, #feedLine6"
-        )
-    ) {
-        calculateBilikAyam();
-    }
-
-});
-
-
-/* Kira apabila halaman dibuka */
-
-window.addEventListener("load", function() {
-
-    setTimeout(function() {
-        calculateBilikAyam();
-    }, 300);
-
-});
-
-$('dimensionUnit').addEventListener('change', calculateAll);
-
-/* ================= TAMAT AUTO KIRA BILIK ================= */
-    </script>
-
+init();
+</script>
 </body>
-    </html>
+</html>
