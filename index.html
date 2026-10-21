@@ -451,6 +451,19 @@ value="6">
 </div>
 
 
+<div style="margin:14px 0;">
+  <label for="dimensionUnit">Unit Ukuran Panjang & Lebar</label>
+  <select id="dimensionUnit"
+          style="width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:12px;font-size:16px;">
+    <option value="m">Meter (m)</option>
+    <option value="ft">Kaki / Feet (ft)</option>
+  </select>
+  <div style="font-size:13px;color:#64748b;margin-top:6px;">
+    Pilih unit yang digunakan untuk mengukur panjang dan lebar partition.
+    Luas dan density akan dikira dalam m².
+  </div>
+</div>
+
 <div class="tablewrap">
 
 <table class="ptable">
@@ -461,11 +474,11 @@ value="6">
 
 <th>Partition</th>
 
-<th>Panjang m</th>
+<th id="lengthHeading">Panjang (m)</th>
 
-<th>Lebar m</th>
+<th id="widthHeading">Lebar (m)</th>
 
-<th>Area m²</th>
+<th>Area (m²)</th>
 
 <th>Ayam</th>
 
@@ -1863,61 +1876,92 @@ fl[x[1]]++
 
 alloc=fl;
 
+function density(){
+
+let total =
+parseFloat($('totalBirds').value) || 0;
+
+const unit = $('dimensionUnit').value;
+const factor = unit === 'ft' ? 0.3048 : 1;
+
+// Kemaskini tajuk kolum mengikut unit pilihan
+$('lengthHeading').textContent =
+unit === 'ft' ? 'Panjang (ft)' : 'Panjang (m)';
+
+$('widthHeading').textContent =
+unit === 'ft' ? 'Lebar (ft)' : 'Lebar (m)';
+
+let areas = [];
+let sum = 0;
+
+// Tukar ukuran kepada meter sebelum kira luas
+for(let i = 1; i <= 6; i++){
+
+let length =
+(parseFloat($('l' + i).value) || 0) * factor;
+
+let width =
+(parseFloat($('w' + i).value) || 0) * factor;
+
+let area = length * width;
+
+areas.push(area);
+sum += area;
+
+$('a' + i).textContent = area.toFixed(2);
+
 }
 
+// Agihkan ayam mengikut luas setiap partition
+let alloc = new Array(6).fill(0);
 
-/* PAPAR PARTITION */
+if(total > 0 && sum > 0){
 
-for(
-let i=1;
-i<=6;
-i++
-){
+let raw = areas.map(a => a / sum * total);
+let fl = raw.map(Math.floor);
 
-$('c'+i)
-.textContent=
-alloc[i-1];
+let rem = Math.round(
+total - fl.reduce((a,b) => a + b, 0)
+);
 
+raw.map((x,i) => [x - fl[i], i])
+.sort((a,b) => b[0] - a[0])
+.slice(0, rem)
+.forEach(x => fl[x[1]]++);
 
-$('d'+i)
-.textContent=
-areas[i-1]?
-(
-alloc[i-1]/
-areas[i-1]
-).toFixed(1):
-'0.0';
+alloc = fl;
 
 }
 
+// Paparkan bilangan ayam dan density setiap partition
+for(let i = 1; i <= 6; i++){
 
-/* IDEAL */
+$('c' + i).textContent = alloc[i-1];
 
-$('capacity')
-.textContent=
-`${Math.floor(sum*10)} - ${Math.floor(sum*12)}`;
+$('d' + i).textContent =
+areas[i-1] > 0
+? (alloc[i-1] / areas[i-1]).toFixed(1)
+: '0.0';
 
+}
 
-$('partStatus')
-.textContent=
-`Status Keseluruhan Reban: ${sum?'Dikira':'-'}`;
+// Kapasiti ideal kekal 10–12 ekor bagi setiap m²
+$('capacity').textContent =
+`${Math.floor(sum * 10)} - ${Math.floor(sum * 12)}`;
 
+$('partStatus').textContent =
+`Status Keseluruhan Reban: ${sum > 0 ? 'Dikira' : '-'}`;
 
-$('partBadge')
-.textContent=
-sum?
-'Dikira':
-'Sedia Kira';
+$('partBadge').textContent =
+sum > 0 ? 'Dikira' : 'Sedia Kira';
 
-
-return{
-
+return {
 total,
 sum
-
 };
 
 }
+
 
 
 /* ============================= */
@@ -2599,7 +2643,10 @@ window.addEventListener("load", function() {
 
 });
 
-/* ================= TAMAT AUTO KIRA BILIK ================= */</script>
+$('dimensionUnit').addEventListener('change', calculateAll);
+
+/* ================= TAMAT AUTO KIRA BILIK ================= */
+    </script>
 
 </body>
     </html>
